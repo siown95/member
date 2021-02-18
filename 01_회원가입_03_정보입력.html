@@ -1,0 +1,291 @@
+<?php
+	include "header.php";
+	include "db.php";
+	session_start();
+	$pin = $_POST["pin"];
+	$phone1 = $_POST["phone1"];
+	$phone2 = $_POST["phone2"];
+	$phone3 = $_POST["phone3"];
+	$phone = $phone1.'-'.$phone2.'-'.$phone3;
+	$query = "select phone from member where phone='$phone'";
+	$result = mysqli_query($conn, $query);
+	$row = mysqli_fetch_array($result);
+	
+	if($row!=0){
+		echo '<script>alert("등록된 사용자입니다."); location.href="00_로그인.html";</script>';
+	}else{
+		if($_SESSION["pin"] == $pin){
+			echo '<script>alert("인증에 성공하였습니다."); </script>';
+		}else{
+			echo '<script>alert("인증에 실패하였습니다."); history.back();</script>';
+		}
+	}
+?>
+<body>
+<?php
+include "body.php";
+?>
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">회원가입</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>회원가입</strong>
+				</div>
+			</div>
+
+			<div class="join-step-bar">
+				<ul>
+					<li><i class="icon-join-agree"></i> 약관동의</li>
+					<li><i class="icon-join-chk"></i> 본인확인</li>
+					<li class="last on"><i class="icon-join-inp"></i> 정보입력</li>
+				</ul>
+			</div>
+
+			<div class="section-content">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">강의정보</caption>
+					<colgroup>
+						<col style="width:15%"/>
+						<col style="*"/>
+					</colgroup>
+
+
+					<form name="myform" action="regist.php" method="POST">
+					<tbody>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이름</th>
+							<td><input type="text" class="input-text" id="name" name="name" style="width:302px" required/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>아이디</th>
+							<td><input type="text" class="input-text" id="id" name="id" style="width:302px" minlength="4" maxlength="15" placeholder="영문자로 시작하는 4~15자의 영문소문자, 숫자" required/>
+								<a href="#" class="btn-s-tin ml10" onclick="idChk();">중복확인</a>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호</th>
+							<td><input type="password" class="input-text" id="password" name="password" style="width:302px" minlength="8" maxlength="15" placeholder="8-15자의 영문자/숫자 혼합" required/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호 확인</th>
+							<td><input type="password" class="input-text" id="passChk" name="passChk" style="width:302px" minlength="8" maxlength="15" required/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이메일주소</th>
+							<td>
+								<input type="text" class="input-text" name="email1" style="width:138px" required/> @ <input type="text" class="input-text" name="email2" style="width:138px" required/>
+								<select name="sel" class="input-sel" style="width:160px" onchange="changeSelect(this);">
+									<option value="user">직접입력</option>
+									<option value="test1.co.kr">test1.co.kr</option>
+									<option value="test2.com">test2.com</option>
+									<option value="test3.org">test3.org</option>
+									<option value="test4.go">test4.go</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>휴대폰 번호</th>
+							<td>
+								<input type="text" class="input-text" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone1?> readonly/> - 
+								<input type="text" class="input-text" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone2?> readonly/> - 
+								<input type="text" class="input-text" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone3?> readonly/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons"></span>일반전화 번호</th>
+							<td>
+								<input type="text" class="input-text" id="home1" name="home1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:88px" minlength="2" maxlength="3"/>
+								- <input type="text" class="input-text" id="home2" name="home2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:88px" minlength="3" maxlength="4"/>
+								- <input type="text" class="input-text" id="home3" name="home3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:88px" minlength="4" maxlength="4"/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>주소</th>
+							<td>
+								<p >
+									<label>우편번호 <input type="text" class="input-text ml5" style="width:242px" id="zip" name="zip" required readonly /></label>
+									<a href="#" class="btn-s-tin ml10" onclick="daum_api();">주소찾기</a>
+								</p>
+								<p class="mt10">
+									<label>기본주소 <input type="text" class="input-text ml5" id="address1" name="address1" style="width:719px" required/></label>
+								</p>
+								<p class="mt10">
+									<label>상세주소 <input type="text" class="input-text ml5" id="address2" name="address2" style="width:719px" required/></label>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>SMS수신</th>
+							<td>
+								<div class="box-input">
+									<label class="input-sp">
+										<input type="radio" name="radio" value="true" checked="checked"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="radio" value="false"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>SMS수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>메일수신</th>
+							<td>
+								<div class="box-input">
+									<label class="input-sp">
+										<input type="radio" name="radio2" value="true" checked="checked"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="radio2" value="false"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>메일수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="box-btn">
+					<!-- <a href="#" class="btn-l">회원가입</a> -->
+					<input type="submit" class="btn-l" onclick="return submitChk();" value="회원가입"> 
+				</div>
+			</form>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+include "footer.php";
+?>
+</div>
+<script>	
+	function idChk(){
+		var id = document.getElementById("id").value;
+		if(id){
+			url = "idChk.html?id="+id;
+			window.open(url,"chkid", "width=500,height=150");
+		}else{
+			alert("아이디를 입력하세요!");
+		}
+	}
+	//아이디 중복체크
+	function sendData(){
+        document.getElementById("id").readOnly=true;
+    }
+	//아이디 중복체크 후 readOnly로 변환
+	$("#name").keyup(function(e) { 
+	if (!(e.keyCode >=37 && e.keyCode<=40)) {
+		var v = $(this).val();
+		$(this).val(v.replace(/[^ㄱ-힣]/gi,''));
+	}
+	});
+	//이름 한글만 입력
+	$("#id").keyup(function(e) { 
+	if (!(e.keyCode >=37 && e.keyCode<=40)) {
+		var v = $(this).val();
+		$(this).val(v.replace(/[^a-z0-9]/gi,''));
+	}
+	});
+	//id 영문, 숫자만 입력
+	function checkNumber(event) {
+		if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
+    		return true;
+  		}
+  		return false;
+	}
+	//숫자만 입력
+	function changeSelect(s){
+    	form = document.myform;
+    	sel = s[s.selectedIndex].value;
+    	dis = true;
+ 
+    	if(sel=="user"){
+        	sel = "";
+        	dis = false;
+			form.email2.value = sel;
+        	form.email2.readOnly = dis;
+    	} else {
+        	form.email2.value = sel;
+        	form.email2.readOnly = dis;
+    	}
+	}
+	//이메일 셀렉트
+	function submitChk(){
+		var idChk = document.getElementById("id").readOnly;
+		var pw = document.getElementById("password").value;
+		var pwChk = document.getElementById("passChk").value;
+		var home1 = document.getElementById("home1").value;
+		var home2 = document.getElementById("home2").value;
+		var home3 = document.getElementById("home3").value;
+		if(home1 != '' || home2 != '' || home3 != ''){
+			document.getElementById("home1").required=true;
+			document.getElementById("home2").required=true;
+			document.getElementById("home3").required=true;
+		}else{
+			document.getElementById("home1").required=false;
+			document.getElementById("home2").required=false;
+			document.getElementById("home3").required=false;
+		}
+		if(idChk == false){
+			alert("아이디 중복체크를 해주세요!");
+			return false;
+		}else if(pw!=pwChk){
+			alert("비밀번호가 일치하지 않습니다!");
+			return false;
+		}else if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
+			alert("비밀번호는 영어와 숫자를 포함해야합니다!");
+			return false;
+		}else{
+			return true;
+		}
+	}
+//submit 체크
+</script>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+function daum_api() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if(data.userSelectedType === 'R'){
+                    //법정동명이 있을 경우 추가한다.
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('address1').value = fullAddr;
+				document.getElementById('zip').readOnly = true;
+				document.getElementById('address1').readOnly = true;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('address2').focus();
+            }
+        }).open();
+    }
+</script>
+</body>
+</html>

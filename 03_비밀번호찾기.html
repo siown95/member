@@ -1,0 +1,155 @@
+<?php
+include "header.php";
+?>
+<body>
+<?php
+include "body.php";
+?>
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">아이디/비밀번호 찾기</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>아이디/비밀번호 찾기</strong>
+				</div>
+			</div>
+
+			<ul class="tab-list">
+				<li><a href="02_아이디찾기.html">아이디 찾기</a></li>
+				<li class="on"><a href="03_비밀번호찾기.html">비밀번호 찾기</a></li>
+			</ul>
+			<form action="03_비밀번호찾기_완료.html" method="post">
+			<div class="tit-box-h4">
+				<h3 class="tit-h4">비밀번호 찾기 방법 선택</h3>
+			</div>
+
+			<dl class="find-box">
+				<dt>휴대폰 인증</dt>
+				<dd>
+					고객님이 회원 가입 시 등록한 휴대폰 번호와 입력하신 휴대폰 번호가 동일해야 합니다.
+					<label class="input-sp big">
+						<input type="radio" id="phone" name="radio" value="phone" checked="checked" onclick="findRadio();"/>
+						<span class="input-txt"></span>
+					</label>
+				</dd>
+			</dl>
+
+			<dl class="find-box">
+				<dt>이메일 인증</dt>
+				<dd>
+					고객님이 회원 가입 시 등록한 이메일 주소와 입력하신 이메일 주소가 동일해야 합니다.
+					<label class="input-sp big">
+						<input type="radio" id="email" name="radio" value="email" onclick="findRadio();"/>
+						<span class="input-txt"></span>
+					</label>
+				</dd>
+			</dl>
+
+			<div class="section-content mt30">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">아이디/비밀번호 찾기 개인정보입력</caption>
+					<colgroup>
+						<col style="width:15%"/>
+						<col style="*"/>
+					</colgroup>
+
+					<tbody>
+						<tr>
+							<th scope="col">성명</th>
+							<td><input type="text" name="name" class="input-text" style="width:302px" /></td>
+						</tr>
+						<tr>
+							<th scope="col">아이디</th>
+							<td><input type="text" name="id" class="input-text" style="width:302px" /></td>								
+						</tr>
+						<tr id="chk_phone" style="*">
+							<th scope="col">핸드폰번호</th>
+							<td>
+								<input type="text" class="input-text" style="width:50px" id="phone1" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="3" maxlength="3"/> - 
+								<input type="text" class="input-text" style="width:50px" id="phone2" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4"/> - 
+								<input type="text" class="input-text" style="width:50px" id="phone3" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4"/>												
+								<a href="#" class="btn-s-tin ml10" onclick="chkPhone()">인증번호 받기</a>
+							</td>
+						</tr>
+						<tr id="chk_email" style="display: none">
+							<th scope="col">이메일주소</th>
+							<td>
+								<input type="text" class="input-text" id="email1" name="email1" style="width:138px"/>
+								@ <input type="text" class="input-text" id="email2" name="email2" name="optionValue" style="width:138px"/>
+								<select class="input-sel" name="email" onchange="getValue(this.form);" style="width:160px">
+									<option value="">직접입력</option>
+									<option value="test.1.2">test.1.2</option>
+									<option value="test.2.3">test.2.3</option>
+									<option value="test.3.4">test.3.4</option>
+									<option value="test.4.5">test.4.5</option>
+								</select>								
+								<a href="#" class="btn-s-tin ml10" onclick="chkEmail();">인증번호 받기</a>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col">인증번호</th>
+							<td>
+								<input type="text" name="pin" class="input-text" style="width:478px" />
+								<!-- <a href="#" class="btn-s-tin ml10">인증번호 확인</a> -->
+								<input type="submit" class="btn-s-tin ml10" value="인증번호 확인">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+include "footer.php";
+?>
+</div>
+<script>
+	function findRadio(){
+		var findPhone = document.getElementById("phone");
+		var findEmail = document.getElementById("email");
+		if(findPhone.checked){		
+			document.getElementById("chk_phone").style.display="";
+			document.getElementById("chk_email").style.display="none";
+		}else if(findEmail.checked){
+			document.getElementById("chk_phone").style.display="none";
+			document.getElementById("chk_email").style.display="";			
+		}
+	}
+	function chkPhone(){
+		var phone1 = document.getElementById("phone1").value;
+		var phone2 = document.getElementById("phone2").value;
+		var phone3 = document.getElementById("phone3").value;
+		if(phone1.length<3 || phone2.length<4 || phone3.length<4){
+			alert("번호를 확인해 주세요");
+		}else{
+			alert("인증번호가 발송되었습니다!");
+			document.getElementById("phone1").readOnly = true;
+			document.getElementById("phone2").readOnly = true;
+			document.getElementById("phone3").readOnly = true;
+		}
+	}
+	function chkEmail(){
+		var email1 = document.getElementById("email1").value;
+		var email2 = document.getElementById("email2").value;
+
+		if(email1=='' || email2 == ''){
+			alert("정확한 주소를 입력하세요");
+		}else{
+			alert("인증번호가 발송되었습니다!");
+			document.getElementById("email1").readOnly = true;
+			document.getElementById("email2").readOnly = true;
+		}
+	}
+	function checkNumber(event) {
+		if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
+    		return true;
+  		}
+  		return false;
+	}
+</script>
+</body>
+</html>

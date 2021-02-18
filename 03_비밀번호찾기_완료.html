@@ -1,0 +1,96 @@
+<?php
+include "header.php"
+include "db.php";
+session_start();
+$_SESSION['pin'] = '123456';
+$radio = $_POST['radio'];
+$pin = $_POST['pin'];
+$name = $_POST['name'];
+if($pin != $_SESSION['pin']){
+    echo '<script>alert("인증번호가 일치하지 않습니다.");history.back();</script>';
+}else{
+    if($radio=='phone'){
+        $phone1 = $_POST['phone1'];
+        $phone2 = $_POST['phone2'];
+        $phone3 = $_POST['phone3'];
+        $phone = $phone1.$phone2.$phone3;
+        $query = "select id from member where uname='$name' and phone='$phone'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_array($result);
+        if($row==0){
+            echo '<script>alert("가입 정보가 없습니다.");history.back();</script>';
+        }else{
+			$_SESSION['userid'] = $row['id'];
+		}
+    }else{
+        $email1 = $_POST['email1'];
+        $email2 = $_POST['email2'];
+        $email = $email1.'@'.$email2;
+        $query = "select id from member where email='$email' and uname='$name'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_array($result);
+        if($row==0){
+            echo '<script>alert("가입 정보가 없습니다.");history.back();</script>';
+        }else{
+			$_SESSION['userid'] = $row['id'];
+		}
+    }
+}
+?>
+<body>
+<?php include "body.php";?>
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">아이디/비밀번호 찾기</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>아이디/비밀번호 찾기</strong>
+				</div>
+			</div>
+
+			<ul class="tab-list">
+				<li><a href="#">아이디 찾기</a></li>
+				<li class="on"><a href="#">비밀번호 찾기</a></li>
+			</ul>
+
+			<div class="tit-box-h4">
+				<h3 class="tit-h4">비밀번호 재설정</h3>
+			</div>
+
+			<div class="section-content mt30">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">비밀번호 재설정</caption>
+					<colgroup>
+						<col style="width:17%"/>
+						<col style="*"/>
+					</colgroup>
+					<form action="find_pw.php" method="POST">
+					<tbody>
+						<tr>
+							<th scope="col">신규 비밀번호 입력</th>
+							<td><input type="password" class="input-text" name="password" placeholder="8-15자의 영문자/숫자 혼합" style="width:302px" minlength="8" maxlength="15" required/></td>
+						</tr>
+						<tr>
+							<th scope="col">신규 비밀번호 재확인</th>
+							<td><input type="password" class="input-text" name="passChk" style="width:302px" minlength="4" maxlength="15" required/></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="box-btn">
+					<!-- <a href="#" class="btn-l">확인</a> -->
+					<input type="submit" class="btn-l" value="확인">
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php
+include "footer.php";
+?>
+</div>
+</body>
+</html>
