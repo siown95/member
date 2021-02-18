@@ -1,3 +1,3 @@
 <?php
-$index = $_GET['url'];
+echo 'test';
 ?>
