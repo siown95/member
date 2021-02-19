@@ -1,5 +1,5 @@
 <?php
-include "db.php";
+include "../db.php";
 $name = $_POST['name'];
 $id = $_POST['id'];
 $password = $_POST['password'];
@@ -21,7 +21,7 @@ $email = $email1.'@'.$email2;
 $phone = $phone1.'-'.$phone2.'-'.$phone3;
 $email_query = "select email from member where email='$email'";
 $email_result = mysqli_query($conn, $email_query);
-$row = mysqli_fetch_array($result);
+$row = mysqli_fetch_array($email_result);
 if($home1 != '' && $home2 != '' && $home3 != ''){
     $home = $home1.'-'.$home2.'-'.$home3;
 }else{
@@ -30,12 +30,10 @@ if($home1 != '' && $home2 != '' && $home3 != ''){
 $address = $address1.' '.$address2;
 $hashpass = hash("sha256", $password);
 $check_email=filter_var($email, FILTER_VALIDATE_EMAIL);
-if($password != $passChk){
-    echo '<script>alert("비밀번호와 확인이 다릅니다.");history.back();</script>';
-}else if($check_email!=true){
+if($check_email!=true){
     echo '<script>alert("잘못된 이메일 형식입니다.");history.back();</script>';
-}else if(row == 1){
-    echo '<script>alert("등록된 이메일 형식입니다.");history.back();</script>';
+}else if($row['email'] == $email){
+    echo '<script>alert("등록된 이메일입니다.");location.href="login.html";</script>';
 }else{
     $query = "insert into member (uname, id, pw, pw_crypt, email, phone, home, zip,address, sms, mailre)
         values ('$name','$id','$password','$hashpass','$email','$phone','$home','$zip','$address', $radio, $radio2)";

@@ -1,6 +1,6 @@
 <?php 
 session_start();
-include "db.php";
+include "../db.php";
 $origin = $_SESSION['userid'];
 $id = $_POST['id'];
 $password = $_POST['password'];
@@ -18,7 +18,7 @@ $radio2 = $_POST['radio2'];
 $email = $email1.'@'.$email2;
 $email_query = "select email from member where email='$email'";
 $email_result = mysqli_query($conn, $email_query);
-$row = mysqli_fetch_array($result);
+$row = mysqli_fetch_array($email_result);
 if($home1 != '' && $home2 != '' && $home3 != ''){
     $home = $home1.'-'.$home2.'-'.$home3;
 }else{

@@ -25,4 +25,8 @@ else if($mode =='find_pass'){
     header("Location: /member/find_complete.html");
     exit();
 }
+else if($mode =='modify'){
+    header("Location: /member/modify.html");
+    exit();
+}
 ?>

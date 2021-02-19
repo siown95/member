@@ -1,5 +1,5 @@
 <?php 
-include "db.php";
+include "../db.php";
 $id = $_GET["id"];
 $query = "select id from member where id='".$id."'";
 $result = mysqli_query($conn, $query);
@@ -14,7 +14,7 @@ if(!preg_match($chk, $idobj)){
     if($row == 0){
         echo '<script>alert("'.$id.'는 사용 가능한 아이디입니다.");opener.sendData();window.close();</script>';
     }else{
-            echo '<script>alert("중복된 아이디 입니다.");window.close();</script>';
+        echo '<script>alert("중복된 아이디 입니다.");window.close();</script>';
     }    
 }
 mysqli_close($conn);

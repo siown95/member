@@ -168,11 +168,13 @@ include "../footer.php";
 <script>	
 	function idChk(){
 		var id = document.getElementById("id").value;
-		if(id){
+		if(id.length < 4 && id.length > 1){
+			alert("아이디는 4자리 이상 입력해주세요!");
+		}else if(!id){
+			alert("아이디를 입력하세요!");
+		}else{
 			url = "idChk.php?id="+id;
 			window.open(url,"chkid", "width=500,height=150");
-		}else{
-			alert("아이디를 입력하세요!");
 		}
 	}
 	//아이디 중복체크
