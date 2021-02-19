@@ -41,7 +41,7 @@ if($password != $passChk){
         values ('$name','$id','$password','$hashpass','$email','$phone','$home','$zip','$address', $radio, $radio2)";
     $result = mysqli_query($conn, $query);
     if($result){
-        echo '<script>alert("회원가입 완료"); location.href="01_회원가입_04_회원가입완료.html";</script>';
+        echo '<script>alert("회원가입 완료"); location.href="complete.html";</script>';
     }else{
         echo '<script>alert("Fail!"); history.back();</script>';
     }

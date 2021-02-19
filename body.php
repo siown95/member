@@ -114,8 +114,8 @@
 					<?php 
 						if(empty($_SESSION['userid'])){
 							echo '<!-- 로그인전 -->
-								<a href="00_로그인.html">로그인</a>
-								<a href="01_회원가입_01_약관동의.html">회원가입</a>
+								<a href="/member/login.html">로그인</a>
+								<a href="/member/index.php/?mode=step_01">회원가입</a>
 								<a href="#">상담/고객센터</a>';
 						}else{
 							echo '

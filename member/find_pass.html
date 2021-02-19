@@ -1,9 +1,9 @@
 <?php
-include "header.php";
+include "../header.php";
 ?>
 <body>
-<?php 
-include "body.php";
+<?php
+include "../body.php";
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -17,13 +17,14 @@ include "body.php";
 			</div>
 
 			<ul class="tab-list">
-				<li class="on"><a href="02_아이디찾기.html">아이디 찾기</a></li>
-				<li><a href="03_비밀번호찾기.html">비밀번호 찾기</a></li>
+				<li><a href="02_아이디찾기.html">아이디 찾기</a></li>
+				<li class="on"><a href="03_비밀번호찾기.html">비밀번호 찾기</a></li>
 			</ul>
-			<form action="02_아이디찾기완료.html" method="post">
+			<form action="03_비밀번호찾기_완료.html" method="post">
 			<div class="tit-box-h4">
-				<h3 class="tit-h4">아이디 찾기 방법 선택</h3>
+				<h3 class="tit-h4">비밀번호 찾기 방법 선택</h3>
 			</div>
+
 			<dl class="find-box">
 				<dt>휴대폰 인증</dt>
 				<dd>
@@ -48,7 +49,7 @@ include "body.php";
 
 			<div class="section-content mt30">
 				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
-					<caption class="hidden">아이디 찾기 개인정보 입력</caption>
+					<caption class="hidden">아이디/비밀번호 찾기 개인정보입력</caption>
 					<colgroup>
 						<col style="width:15%"/>
 						<col style="*"/>
@@ -57,36 +58,11 @@ include "body.php";
 					<tbody>
 						<tr>
 							<th scope="col">성명</th>
-							<td><input type="text" class="input-text" name="name" style="width:302px" /></td>
+							<td><input type="text" name="name" class="input-text" style="width:302px" /></td>
 						</tr>
 						<tr>
-							<th scope="col">생년월일</th>
-							<td>
-								<select class="input-sel" style="width:148px">
-									<option value="">선택</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-								</select>
-								년
-								<select class="input-sel" style="width:147px">
-									<option value="">선택</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-								</select>
-								월
-								<select class="input-sel" style="width:147px">
-									<option value="">선택</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-									<option value="">선택입력</option>
-								</select>
-								일
-							</td>
+							<th scope="col">아이디</th>
+							<td><input type="text" name="id" class="input-text" style="width:302px" /></td>								
 						</tr>
 						<tr id="chk_phone" style="*">
 							<th scope="col">핸드폰번호</th>
@@ -127,9 +103,8 @@ include "body.php";
 		</div>
 	</div>
 </div>
-
 <?php
-include "footer.php";
+include "../footer.php";
 ?>
 </div>
 <script>

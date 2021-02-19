@@ -1,6 +1,6 @@
 <?php
-include "header.php"
-include "db.php";
+include "../header.php"
+include "../db.php";
 session_start();
 $_SESSION['pin'] = '123456';
 $radio = $_POST['radio'];
@@ -38,7 +38,7 @@ if($pin != $_SESSION['pin']){
 }
 ?>
 <body>
-<?php include "body.php";?>
+<?php include "../body.php";?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
 		<div class="inner">
@@ -89,7 +89,7 @@ if($pin != $_SESSION['pin']){
 </div>
 
 <?php
-include "footer.php";
+include "../footer.php";
 ?>
 </div>
 </body>

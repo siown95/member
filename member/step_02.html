@@ -1,11 +1,11 @@
 <?php
 session_start();
 $_SESSION["pin"] = '123456';
-include "header.php";
+include "../header.php";
 ?>
 <body>
 <?php 
-include "body.php";
+include "../body.php";
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -33,7 +33,7 @@ include "body.php";
 			<div class="section-content after">
 				<div class="identify-box" style="width:100%;height:190px;">
 					<div class="identify-inner">
-						<form action="01_회원가입_03_정보입력.html" method="POST">
+						<form action="step_03.html" method="POST">
 						<strong>휴대폰 인증</strong>
 						<p>주민번호 없이 메시지 수신가능한 휴대폰으로 1개 아이디만 회원가입이 가능합니다. </p>
 
@@ -57,7 +57,7 @@ include "body.php";
 	</div>
 </div>
 <?php
-include "footer.php";
+include "../footer.php";
 ?>
 </div>
 <script>	
