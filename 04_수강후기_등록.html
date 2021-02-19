@@ -1,10 +1,11 @@
 <?php
-include "header.php";
+include "call_index.php";
+call_header();
 session_start();
 ?>
 <body>
 <?php
-include "body.php";
+call_body();
 ?>
 <div id="container" class="container">
 	<div id="nav-left" class="nav-left">
@@ -130,7 +131,7 @@ include "body.php";
 	</div>
 </div>
 <?php
-include "footer.php";
+call_footer();
 ?>
 </div>
 </body>
