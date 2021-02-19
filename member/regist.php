@@ -46,5 +46,5 @@ if($password != $passChk){
         echo '<script>alert("Fail!"); history.back();</script>';
     }
 }
-
+mysqli_close($conn);
 ?>

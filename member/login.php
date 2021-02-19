@@ -16,7 +16,7 @@ if($row == 0){
 }else{
     $_SESSION['userid'] = $id;
     echo '<script>alert("로그인 성공!");location.href="/member/index.php/?mode=index";</script>';
-    mysqli_close($conn);
 }
+mysqli_close($conn);
 ?>
 

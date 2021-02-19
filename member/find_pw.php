@@ -1,5 +1,5 @@
 <?php
-include "db.php";
+include "../db.php";
 session_start();
 $id = $_SESSION['userid'];
 $password = $_POST['password'];
@@ -12,7 +12,7 @@ if($password != $passChk){
     $query = "update member set pw='$password', pw_crypt='$hashpass' where id='$id'";
     $result = mysqli_query($conn, $query);
     if($result){
-        echo '<script>alert("비밀번호가 변경되었습니다.");location.href="00_로그인.html";</script>';
+        echo '<script>alert("비밀번호가 변경되었습니다.");location.href="login.html";</script>';
     }
 }
 ?>

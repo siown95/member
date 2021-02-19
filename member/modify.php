@@ -40,12 +40,12 @@ if($password != $passChk){
     $result = mysqli_query($conn, $query);
     if($result){
         $_SESSION['userid'] = $id;
-        echo '<script>alert("정보가 수정되었습니다.");location.href="index.html";</script>';
+        echo '<script>alert("정보가 수정되었습니다.");location.href="/member/index.php/?mode=index";</script>';
 
     }else{
         echo '<script>alert("fail");history.back();</script>';
     }
 }
-
+mysqli_close($conn);
 
 ?>

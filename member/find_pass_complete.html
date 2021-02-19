@@ -71,27 +71,39 @@ mysqli_close($conn);
 					<tbody>
 						<tr>
 							<th scope="col">신규 비밀번호 입력</th>
-							<td><input type="password" class="input-text" name="password" placeholder="8-15자의 영문자/숫자 혼합" style="width:302px" minlength="8" maxlength="15" required/></td>
+							<td><input type="password" class="input-text" id="password" name="password" placeholder="8-15자의 영문자/숫자 혼합" style="width:302px" minlength="8" maxlength="15" required/></td>
 						</tr>
 						<tr>
 							<th scope="col">신규 비밀번호 재확인</th>
-							<td><input type="password" class="input-text" name="passChk" style="width:302px" minlength="4" maxlength="15" required/></td>
+							<td><input type="password" class="input-text" id="pwChk" name="passChk" style="width:302px" minlength="4" maxlength="15" required/></td>
 						</tr>
 					</tbody>
 				</table>
 				<div class="box-btn">
 					<!-- <a href="#" class="btn-l">확인</a> -->
-					<input type="submit" class="btn-l" value="확인">
+					<input type="submit" onclick="return passChk();" class="btn-l" value="확인">
 				</div>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-
 <?php
 include "../footer.php";
 ?>
+<script>
+	var pw = document.getElementById("password").value;
+	var pwChk = document.getElementById("passChk").value;
+	if(pw!=pwChk){
+		alert("비밀번호가 일치하지 않습니다!");
+		return false;
+	}else if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
+		alert("비밀번호는 영어와 숫자를 포함해야합니다!");
+		return false;
+	}else{
+		return true;
+	}
+</script>
 </div>
 </body>
 </html>
