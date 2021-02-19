@@ -1,5 +1,5 @@
 <?php
-include "db.php";
+include "../db.php";
 session_start();
 $id = $_POST['id'];
 $password = $_POST['password'];
@@ -15,7 +15,8 @@ if($row == 0){
     echo '<script>alert("비밀번호가 일치하지 않습니다.");history.back();</script>';
 }else{
     $_SESSION['userid'] = $id;
-    echo '<script>alert("로그인 성공!");location.href="index.html";</script>';
+    echo '<script>alert("로그인 성공!");location.href="/member/index.php/?mode=index";</script>';
+    mysqli_close($conn);
 }
 ?>
 

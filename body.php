@@ -120,7 +120,7 @@
 						}else{
 							echo '
 							<!-- 로그인후 -->
-								<a href="logout.php">로그아웃</a>
+								<a href="/member/logout.php">로그아웃</a>
 								<a href="05_내정보수정.html">내정보</a>
 								<a href="#">상담/고객센터</a>';
 						}

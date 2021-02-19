@@ -8,6 +8,7 @@ $result = mysqli_query($conn, $query);
 $row = mysqli_fetch_array($result);
 $name = $row['uname'];
 $phone = $row['phone'];
+mysqli_close($conn);
 ?>
 <body>
 <?php
@@ -137,6 +138,7 @@ include "../body.php";
 	</div>
 </div>
 <?php
+
 include "../footer.php";
 ?>
 </div>
