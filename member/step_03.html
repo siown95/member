@@ -1,6 +1,7 @@
 <?php
-	include "../header.php";
+	include "../call_index.php";
 	include "../db.php";
+	call_header();
 	session_start();
 	$pin = $_POST["pin"];
 	$phone1 = $_POST["phone1"];
@@ -24,7 +25,7 @@
 ?>
 <body>
 <?php
-include "../body.php";
+call_body();
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -162,7 +163,7 @@ include "../body.php";
 	</div>
 </div>
 <?php
-include "../footer.php";
+call_footer();
 ?>
 </div>
 <script>	

@@ -28,5 +28,7 @@ else if($mode =='find_pass'){
 else if($mode =='modify'){
     header("Location: /member/modify.html");
     exit();
+}else if($mode ==''){
+    
 }
 ?>

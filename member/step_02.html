@@ -1,11 +1,12 @@
 <?php
 session_start();
 $_SESSION["pin"] = '123456';
-include "../header.php";
+include "../call_index.php";
+call_header();
 ?>
 <body>
 <?php 
-include "../body.php";
+call_body();
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -57,7 +58,7 @@ include "../body.php";
 	</div>
 </div>
 <?php
-include "../footer.php";
+call_footer();
 ?>
 </div>
 <script>	

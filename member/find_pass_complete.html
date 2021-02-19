@@ -1,6 +1,7 @@
 <?php
-include "../header.php"
+include "../call_index.php"
 include "../db.php";
+call_header();
 session_start();
 $_SESSION['pin'] = '123456';
 $radio = $_POST['radio'];
@@ -39,7 +40,9 @@ if($pin != $_SESSION['pin']){
 mysqli_close($conn);
 ?>
 <body>
-<?php include "../body.php";?>
+<?php
+	call_body();
+?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
 		<div class="inner">
@@ -89,7 +92,7 @@ mysqli_close($conn);
 	</div>
 </div>
 <?php
-include "../footer.php";
+call_footer();
 ?>
 <script>
 	var pw = document.getElementById("password").value;
