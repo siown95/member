@@ -21,7 +21,7 @@ call_body();
 				<li><a href="find_id.html">아이디 찾기</a></li>
 				<li class="on"><a href="find_pass.html">비밀번호 찾기</a></li>
 			</ul>
-			<form action="find_pass_complete.html" method="post">
+			<form name="myform" action="find_pass_complete.html" method="post">
 			<div class="tit-box-h4">
 				<h3 class="tit-h4">비밀번호 찾기 방법 선택</h3>
 			</div>
@@ -59,11 +59,11 @@ call_body();
 					<tbody>
 						<tr>
 							<th scope="col">성명</th>
-							<td><input type="text" name="name" class="input-text" style="width:302px" /></td>
+							<td><input type="text" id="name" name="name" class="input-text" style="width:302px" /></td>
 						</tr>
 						<tr>
 							<th scope="col">아이디</th>
-							<td><input type="text" name="id" class="input-text" style="width:302px" /></td>								
+							<td><input type="text" id="id" name="id" class="input-text" style="width:302px" /></td>								
 						</tr>
 						<tr id="chk_phone" style="*">
 							<th scope="col">핸드폰번호</th>
@@ -79,12 +79,12 @@ call_body();
 							<td>
 								<input type="text" class="input-text" id="email1" name="email1" style="width:138px"/>
 								@ <input type="text" class="input-text" id="email2" name="email2" name="optionValue" style="width:138px"/>
-								<select class="input-sel" name="email" onchange="getValue(this.form);" style="width:160px">
-									<option value="">직접입력</option>
-									<option value="test.1.2">test.1.2</option>
-									<option value="test.2.3">test.2.3</option>
-									<option value="test.3.4">test.3.4</option>
-									<option value="test.4.5">test.4.5</option>
+								<select class="input-sel" name="email" onchange="changeSelect(this);" style="width:160px">
+									<option value="user">직접입력</option>
+									<option value="test1.co.kr">test1.co.kr</option>
+									<option value="test2.com">test2.com</option>
+									<option value="test3.org">test3.org</option>
+									<option value="test4.go">test4.go</option>
 								</select>								
 								<a href="#" class="btn-s-tin ml10" onclick="chkEmail();">인증번호 받기</a>
 							</td>
@@ -92,9 +92,9 @@ call_body();
 						<tr>
 							<th scope="col">인증번호</th>
 							<td>
-								<input type="text" name="pin" class="input-text" style="width:478px" />
+								<input type="text" name="pin" class="input-text" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:478px" />
 								<!-- <a href="#" class="btn-s-tin ml10">인증번호 확인</a> -->
-								<input type="submit" class="btn-s-tin ml10" value="인증번호 확인">
+								<input type="submit" class="btn-s-tin ml10" onclick="return submitChk();" value="인증번호 확인">
 							</td>
 						</tr>
 					</tbody>
@@ -109,6 +109,18 @@ call_footer();
 ?>
 </div>
 <script>
+	$("#name").keyup(function(e) { 
+	if (!(e.keyCode >=37 && e.keyCode<=40)) {
+		var v = $(this).val();
+		$(this).val(v.replace(/[^ㄱ-힣]/gi,''));
+	}
+	});
+	$("#id").keyup(function(e) { 
+	if (!(e.keyCode >=37 && e.keyCode<=40)) {
+		var v = $(this).val();
+		$(this).val(v.replace(/[^a-z0-9]/gi,''));
+	}
+	});
 	function findRadio(){
 		var findPhone = document.getElementById("phone");
 		var findEmail = document.getElementById("email");
@@ -119,6 +131,21 @@ call_footer();
 			document.getElementById("chk_phone").style.display="none";
 			document.getElementById("chk_email").style.display="";			
 		}
+	}
+	function changeSelect(s){
+    	form = document.myform;
+    	sel = s[s.selectedIndex].value;
+    	dis = true;
+ 
+    	if(sel=="user"){
+        	sel = "";
+        	dis = false;
+			form.email2.value = sel;
+        	form.email2.readOnly = dis;
+    	} else {
+        	form.email2.value = sel;
+        	form.email2.readOnly = dis;
+    	}
 	}
 	function chkPhone(){
 		var phone1 = document.getElementById("phone1").value;
@@ -150,6 +177,31 @@ call_footer();
     		return true;
   		}
   		return false;
+	}
+	function submitChk(){
+		var findPhone = document.getElementById("phone");
+		var findEmail = document.getElementById("email");
+		var phone1 = document.getElementById("phone1").readOnly;
+		var phone2 = document.getElementById("phone2").readOnly;
+		var phone3 = document.getElementById("phone3").readOnly;
+		var email1 = document.getElementById("email1").readOnly;
+		var email2 = document.getElementById("email2").readOnly;
+		if(findPhone.checked){
+			if(phone1==false||phone2==false||phone3==false){
+				alert("핸드폰 인증을 받아주세요!");
+				return false;
+			}else{
+				return true;
+			}
+		}else if(findEmail.checked){
+			if(email1==false||email2==false||email3==false){
+				alert("이메일 인증을 받아주세요!");
+				return false;
+			}else{
+				return true;
+			}
+
+		}		
 	}
 </script>
 </body>

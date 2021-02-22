@@ -110,7 +110,7 @@ function call_body(){
                             <li class="mnu5">
                                 <a href="#">직무교육 안내</a>
                                 <ul class="nav-sub-lst">
-                                    <li><a href="04_수강후기_리스트.html">수강후기</a></li>
+                                    <li><a href="index.php/?mode=list">수강후기</a></li>
                                     <li><a href="#">서브메뉴</a></li>
                                     <li><a href="#">서브메뉴</a></li>
                                     <li><a href="#">서브메뉴</a></li>
@@ -151,13 +151,13 @@ function call_body(){
                     if(empty($_SESSION['userid'])){
                         echo '<!-- 로그인전 -->
                             <a href="/member/login.html">로그인</a>
-                            <a href="/member/index.php/?mode=step_01">회원가입</a>
+                            <a href="/index.php?mode=step_01">회원가입</a>
                             <a href="#">상담/고객센터</a>';
                     }else{
                         echo '
                         <!-- 로그인후 -->
                             <a href="/member/logout.php">로그아웃</a>
-                            <a href="/member/index.php/?mode=modify">내정보</a>
+                            <a href="/index.php?mode=modify">내정보</a>
                             <a href="#">상담/고객센터</a>';
                     }
                     echo '</div>

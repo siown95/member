@@ -15,7 +15,7 @@ if($row == 0){
     echo '<script>alert("비밀번호가 일치하지 않습니다.");history.back();</script>';
 }else{
     $_SESSION['userid'] = $id;
-    echo '<script>alert("로그인 성공!");location.href="/member/index.php/?mode=index";</script>';
+    echo '<script>alert("로그인 성공!");location.href="/index.php/?mode=index";</script>';
 }
 mysqli_close($conn);
 ?>

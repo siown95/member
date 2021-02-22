@@ -1,7 +1,8 @@
 <?php
 include "../db.php";
 session_start();
-$id = $_SESSION['userid'];
+$id = $_SESSION['id'];
+$name = $_POST['name'];
 $password = $_POST['password'];
 $passChk = $_POST['passChk'];
 $hashpass = hash("sha256", $password);

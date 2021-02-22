@@ -15,25 +15,27 @@ if($pin != $_SESSION['pin']){
         $phone1 = $_POST['phone1'];
         $phone2 = $_POST['phone2'];
         $phone3 = $_POST['phone3'];
-        $phone = $phone1.$phone2.$phone3;
-        $query = "select id from member where uname='$name' and phone='$phone'";
+        $phone = $phone1.'-'.$phone2.'-'.$phone3;
+        $query = "select uname, id from member where uname='$name' and phone='$phone'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
         if($row==0){
             echo '<script>alert("가입 정보가 없습니다.");history.back();</script>';
         }else{
+            $uname = $row['uname'];
             $id = $row['id'];
         }
     }else{
         $email1 = $_POST['email1'];
         $email2 = $_POST['email2'];
         $email = $email1.'@'.$email2;
-        $query = "select id from member where email='$email' and uname='$name'";
+        $query = "select uname, id from member where email='$email' and uname='$name'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
         if($row==0){
             echo '<script>alert("가입 정보가 없습니다.");history.back();</script>';
         }else{
+            $uname = $row['uname'];
             $id = $row['id'];
         }
     }
@@ -56,8 +58,8 @@ call_body();
 			</div>
 
 			<ul class="tab-list">
-				<li class="on"><a href="02_아이디찾기.html">아이디 찾기</a></li>
-				<li><a href="03_비밀번호찾기.html">비밀번호 찾기</a></li>
+				<li class="on"><a href="find_id.html">아이디 찾기</a></li>
+				<li><a href="find_pass.html">비밀번호 찾기</a></li>
 			</ul>
 
 			<div class="tit-box-h4">
@@ -65,7 +67,7 @@ call_body();
 			</div>
 
 			<div class="guide-box">
-				<p class="fs16 mb5">이진아 회원님의 아이디는 아래와 같습니다.</p>
+				<p class="fs16 mb5"><?php echo $uname;?> 회원님의 아이디는 아래와 같습니다.</p>
 				<strong class="big-title tc-brand"><?php echo $id;?></strong>
 			</div>
 
