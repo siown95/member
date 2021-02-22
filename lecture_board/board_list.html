@@ -1,11 +1,16 @@
 <?php
 include "../call_index.php";
+include "../db.php";
 call_header();
 session_start();
 if($_SESSION['userid']==''){
-	echo '<script>alert("관리자 로그인이 필요합니다.");location.href="/member/login.html";</script>';
-} else if($_SESSION['userid']!='admin'){
-	echo '<script>alert("관리자만 접근 가능합니다.");history.back();</script>';
+	echo '<script>alert("로그인이 필요합니다.");location.href="/member/login.html";</script>';
+}
+$kind = $_GET['kind'];
+if(isset($_GET['page'])){
+    $page = $_GET['page'];
+}else{
+    $page = 1;
 }
 ?>
 <body>
@@ -18,11 +23,44 @@ call_body();
 	?>
 
 		<ul class="tab-list tab5">
-			<li class="on"><a href="#">전체</a></li>
-			<li><a href="#">일반직무</a></li>
-			<li><a href="#">산업직무</a></li>
-			<li><a href="#">공통역량</a></li>
-			<li><a href="#">어학 및 자격증</a></li>
+			<?php
+			if($kind=='일반직무'){
+				echo '
+				<li><a href="/lecture_board/board_list.html?page=1">전체</a></li>
+				<li class="on"><a href="/lecture_board/board_list.html?page=1&kind=일반직무">일반직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=산업직무">산업직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=공통역량">공통역량</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=어학 및 자격증">어학 및 자격증</a></li>';
+			}else if($kind=='산업직무'){
+				echo '
+				<li><a href="/lecture_board/board_list.html?page=1">전체</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=일반직무">일반직무</a></li>
+				<li class="on"><a href="/lecture_board/board_list.html?page=1&kind=산업직무">산업직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=공통역량">공통역량</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=어학 및 자격증">어학 및 자격증</a></li>';
+			}else if($kind=='공통역량'){
+				echo '
+				<li><a href="/lecture_board/board_list.html?page=1">전체</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=일반직무">일반직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=산업직무">산업직무</a></li>
+				<li class="on"><a href="/lecture_board/board_list.html?page=1&kind=공통역량">공통역량</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=어학 및 자격증">어학 및 자격증</a></li>';
+			}else if($kind=='어학 및 자격증'){
+				echo '
+				<li><a href="/lecture_board/board_list.html?page=1">전체</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=일반직무">일반직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=산업직무">산업직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=공통역량">공통역량</a></li>
+				<li class="on"><a href="/lecture_board/board_list.html?page=1&kind=어학 및 자격증">어학 및 자격증</a></li>';
+			}else{
+				echo '
+				<li class="on"><a href="/lecture_board/board_list.html?page=1">전체</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=일반직무">일반직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=산업직무">산업직무</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=공통역량">공통역량</a></li>
+				<li><a href="/lecture_board/board_list.html?page=1&kind=어학 및 자격증">어학 및 자격증</a></li>';
+			}
+			?>
 		</ul>
 
 		<div class="search-info">
@@ -60,56 +98,85 @@ call_body();
 			</thead>
 	 
 			<tbody>
-				<!-- set -->
-				<tr class="bbs-sbj">
-					<td><span class="txt-icon-line"><em>BEST</em></span></td>
-					<td>CS</td>
-					<td>
-						<a href="#">
-							<span class="tc-gray ellipsis_line">수강 강의명 : Beyond Trouble, 조직을 감동시키는 관계의 기술</span>
-							<strong class="ellipsis_line">절대 후회 없는 강의 예요!</strong>
-						</a>
-					</td>
-					<td>
-						<span class="star-rating">
-							<span class="star-inner" style="width:80%"></span>
-						</span>
-					</td>
-					<td class="last">이름</td>
-				</tr>
-				<!-- //set -->
-				<!-- set -->
-				<tr class="bbs-sbj">
-					<td>1</td>
-					<td>CS</td>
-					<td>
-						<a href="#">
-							<span class="tc-gray ellipsis_line">수강 강의명 : Beyond Trouble, 조직을 감동시키는 관계의 기술</span>
-							<strong class="ellipsis_line">절대 후회 없는 강의 예요!</strong>
-						</a>
-					</td>
-					<td>
-						<span class="star-rating">
-							<span class="star-inner" style="width:80%"></span>
-						</span>
-					</td>
-					<td class="last">이름</td>
-				</tr>
-				<!-- //set -->
+				<?php		
+                    $query = "select * from board";
+                    $result = mysqli_query($conn, $query);
+                    $total_record = mysqli_num_rows($result);
+                    $list = 20;
+                    $page_count = 5;
+                    $page_num = ceil($page / $page_count);
+                    $page_start = (($page_num-1) * $page_count) + 1;
+                    $page_end = $page_start + $page_count - 1;
+                    $total_page = ceil($total_record / $list);
+                    if($page_end > $total_page){
+                        $page_end = $total_page;
+                    }
+                    $total_block = ceil($total_page / $page_count);
+                    $page_start = ($page - 1) * $list;
+                    $query2 = "select board_num, board_title, board_satis, uname from board, member where board.id=member.id order by board_num desc limit $page_start, $list";
+                    $result2 = mysqli_query($conn, $query2);
+                    while($row = mysqli_fetch_array($result2)){
+					if($row == 0){
+						echo '
+						<tr class="bbs-sbj">
+							<td colspan="5" class="last">
+								등록된 강의가 없습니다!
+							</td>
+						</tr>';
+					}else{
+						$board_num = $row['board_num'];
+						$board_title = $row['board_title'];
+						$board_satis = $row['board_satis'];
+						$uname = $row['uname'];
+						echo '
+							<tr class="bbs-sbj">
+							<td>'.$board_num.'</td>
+							<td>'.$board_title.'</td>
+							<td>
+								<span class="tc-gray ellipsis_line">'.$board_satis.'</span>
+							</td>
+							<td>
+							<span class="tc-gray ellipsis_line">'.$uname.'</span>
+							</td>
+							</tr>';
+						}
+					}
+				?>
 			</tbody>
 		</table>
 
 		<div class="box-paging">
-			<a href="#"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
-			<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
-			<a href="#" class="active">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			<a href="#">6</a>
-			<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
-			<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+			<?php
+            if($page <= 1){
+                echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+            }else{
+                echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+            }
+            if($page <= 1){
+                echo '<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+            }else{
+                $pre = $page - 1;
+                echo '<a href="index.php?page='.$pre.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+            }
+            for($i=$page; $i<=$page_end;$i++){
+                if($page==$i){
+                    echo '<a href="index.php?page='.$i.'" class="active">'.$i.'</a>';
+                }else{
+                    echo '<a href="index.php?page='.$i.'">'.$i.'</a>';
+                }
+            }
+            if($page >= $total_page){
+                echo '<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+            }else{
+                $next = $page + 1;
+                echo '<a href="index.php?page='.$next.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+            }
+            if($page >= $total_page){
+                echo '<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+            }else{
+                echo '<a href="index.php?page='.$total_page.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+            }
+            ?>
 		</div>
 
 		<div class="box-btn t-r">

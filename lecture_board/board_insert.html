@@ -1,7 +1,10 @@
 <?php
 include "../call_index.php";
+include "../db.php";
 call_header();
 session_start();
+$query = "select lecture_title from lecture";
+$result = mysqli_query($conn, $query);
 ?>
 <body>
 <?php
@@ -40,16 +43,21 @@ call_body();
 						</select>
 						<select class="input-sel ml5" style="width:454px">
 							<option value="">강의명</option>
-							<option value="Beyond Trouble, 조직을 감동시키는 관계의 기술">Beyond Trouble, 조직을 감동시키는 관계의 기술</option>
-							<option value="">강의명</option>
-							<option value="">강의명</option>
-							<option value="">강의명</option>
+							<?php
+							while($row = mysqli_fetch_array($result)){
+								$lecture_title = $row['lecture_title'];
+								echo '
+								<option value='.$lecture_title.'>'.$lecture_title.'</option>
+								';
+							}
+							?>
+
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<th scope="col">제목</th>
-					<td><input type="text" class="input-text" style="width:611px"/></td>
+					<td><input type="text" name="board_title" class="input-text" style="width:611px"/></td>
 				</tr>
 				<tr>
 					<th scope="col">강의만족도</th>
@@ -57,7 +65,7 @@ call_body();
 						<ul class="list-rating-choice">
 							<li>
 								<label class="input-sp ico">
-									<input type="radio" name="radio" id="" checked="checked"/>
+									<input type="radio" name="radio" name="board_satis" checked="checked"/>
 									<span class="input-txt">만점</span>
 								</label>
 								<span class="star-rating">
@@ -66,8 +74,8 @@ call_body();
 							</li>
 							<li>
 								<label class="input-sp ico">
-									<input type="radio" name="radio" id=""/>
-									<span class="input-txt">만점</span>
+									<input type="radio" name="radio" name="board_satis"/>
+									<span class="input-txt">4점</span>
 								</label>
 								<span class="star-rating">
 									<span class="star-inner" style="width:80%"></span>
@@ -75,8 +83,8 @@ call_body();
 							</li>
 							<li>
 								<label class="input-sp ico">
-									<input type="radio" name="radio" id=""/>
-									<span class="input-txt">만점</span>
+									<input type="radio" name="radio" name="board_satis"/>
+									<span class="input-txt">3점</span>
 								</label>
 								<span class="star-rating">
 									<span class="star-inner" style="width:60%"></span>
@@ -84,8 +92,8 @@ call_body();
 							</li>
 							<li>
 								<label class="input-sp ico">
-									<input type="radio" name="radio" id=""/>
-									<span class="input-txt">만점</span>
+									<input type="radio" name="radio" name="board_satis"/>
+									<span class="input-txt">2점</span>
 								</label>
 								<span class="star-rating">
 									<span class="star-inner" style="width:40%"></span>
@@ -93,8 +101,8 @@ call_body();
 							</li>
 							<li>
 								<label class="input-sp ico">
-									<input type="radio" name="radio" id=""/>
-									<span class="input-txt">만점</span>
+									<input type="radio" name="radio" name="board_satis"/>
+									<span class="input-txt">1점</span>
 								</label>
 								<span class="star-rating">
 									<span class="star-inner" style="width:20%"></span>
@@ -107,7 +115,7 @@ call_body();
 		</table>
 
 		<div class="editor-wrap">
-			<form name="tx_editor_form" id="tx_editor_form" action="http://posttestserver.com/post.php" method="post" accept-charset="utf-8">
+			<form name="tx_editor_form" id="tx_editor_form" action="board_insert.php" method="post" accept-charset="utf-8">
 				<!-- 에디터 컨테이너 시작 -->
 				<div id="tx_trex_container" class="tx-editor-container">
 					<!-- 사이드바 -->

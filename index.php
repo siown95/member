@@ -21,7 +21,7 @@ else if($mode =='find_pass'){
 else if($mode =='modify'){
     header("Location: /member/modify.html");
 }else if($mode=='list'){
-    header("Location: /lecture_board/board_list.html");
+    header("Location: /lecture_board/board_list.html?page=1");
 }else if($mode=='write'){
     header("Location: /lecture_board/board_insert.html");
 }else if($mode=='admin'){
