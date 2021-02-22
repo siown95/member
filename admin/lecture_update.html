@@ -1,0 +1,152 @@
+<?php
+session_start();
+include "../call_index.php";
+include "../db.php";
+call_header();
+$num = $_GET['num'];
+$lecture_query = "select lecture_kind, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from lecture where lecture_num=$num";
+$lecture_result = mysqli_query($conn, $lecture_query);
+$lecture_row = mysqli_fetch_array($lecture_result);
+$lecture_kind = $lecture_row['lecture_kind'];
+$lecture_title = $lecture_row['lecture_title'];
+$lecture_teacher = $lecture_row['lecture_teacher'];
+$lecture_diffi = $lecture_row['lecture_diffi'];
+$lecture_time = $lecture_row['lecture_time'];
+$lecture_img = $lecture_row['lecture_img'];
+?>
+<body>
+<?php
+call_body();
+?>
+
+<div id="container" class="container">
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">
+			<caption class="hidden">강의정보</caption>
+			<colgroup>
+				<col style="width:15%"/>
+				<col style="*"/>
+			</colgroup>
+            <form action="lecture_update.php?num=<?php echo $num ?>" method="post" enctype="multipart/form-data">
+			<tbody>
+				<tr>
+					<th scope="col">강의분류</th>
+					<td>
+						<select class="input-sel" style="width:160px" id="lecture_kind" name="lecture_kind" required>
+                            <?php
+                            if($lecture_kind=='일반직무'){
+                                echo '
+                                <option value="">분류</option>
+							    <option value="일반직무" selected>일반직무</option>
+							    <option value="산업직무">산업직무</option>
+							    <option value="공통역량">공통역량</option>
+							    <option value="어학 및 자격증">어학 및 자격증</option>';
+                            }else if($lecture_kind=='산업직무'){
+                                echo '
+                                <option value="">분류</option>
+							    <option value="일반직무">일반직무</option>
+							    <option value="산업직무" selected>산업직무</option>
+							    <option value="공통역량">공통역량</option>
+							    <option value="어학 및 자격증">어학 및 자격증</option>';
+                            }else if($lecture_kind=='공통역량'){
+                                echo '
+                                <option value="">분류</option>
+							    <option value="일반직무">일반직무</option>
+							    <option value="산업직무">산업직무</option>
+							    <option value="공통역량" selected>공통역량</option>
+							    <option value="어학 및 자격증">어학 및 자격증</option>';
+                            }else{
+                                echo '
+                                <option value="">분류</option>
+							    <option value="일반직무">일반직무</option>
+							    <option value="산업직무">산업직무</option>
+							    <option value="공통역량">공통역량</option>
+							    <option value="어학 및 자격증" selected>어학 및 자격증</option>';
+                            }
+                            ?>
+							
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col">강의제목</th>
+					<td><input type="text" class="input-text" style="width:611px" id="lecture_title" name="lecture_title" value="<?php echo $lecture_title ?>" required/></td>
+				</tr>
+                <tr>
+					<th scope="col">강사</th>
+					<td>
+                    <input type="text" class="input-text" style="width:611px" id="lecture_teacher" name="lecture_teacher" value="<?php echo $lecture_teacher ?>" required/>
+					</td>
+				</tr>
+                <tr>
+					<th scope="col">학습난이도</th>
+					<td>
+                        <select class="input-sel" style="width:454px" id="lecture_diffi" name="lecture_diffi" required>   
+                            <?php 
+                            if($lecture_diffi=='상'){
+                                echo '
+                                <option value="">난이도</option>
+                                <option value="상" selected>상</option>
+                                <option value="중">중</option>
+                                <option value="하">하</option>';
+                            }else if($lecture_diffi == '중'){
+                                echo '
+                                <option value="">난이도</option>
+                                <option value="상">상</option>
+                                <option value="중" selected>중</option>
+                                <option value="하">하</option>';
+                            }else{
+                                echo '
+                                <option value="">난이도</option>
+                                <option value="상">상</option>
+                                <option value="중">중</option>
+                                <option value="하" selected>하</option>';
+                            }
+                            ?>
+							
+						</select>
+					</td>
+				</tr>
+                <tr>
+					<th scope="col">교육시간</th>
+					<td>
+                    <input type="text" class="input-text" style="width:611px" id="lecture_time" name="lecture_time" value="<?php echo $lecture_time ?>" required/>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col">강의이미지</th>
+					<td>
+						<input type="file" id="lecture_img" name="lecture_img" accept="image/gif, image/jpeg, image/png, image/jpg" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="box-btn t-r">
+            <a href="/index.php?mode=admin" class="btn-m-gray">목록</a>
+            <input type="submit" class="btn-m" value="수정하기" onclick="return submitChk();">
+	    </div>
+    </form>
+	</div>
+</div>
+<?php
+call_footer();
+?>
+</div>
+<script>
+function submitChk(){
+	var kind = document.getElementById("lecture_kind").value;
+	var title = document.getElementById("lecture_title").value;
+	var teacher = document.getElementById("lecture_teacher").value;
+	var diffi = document.getElementById("lecture_diffi").value;
+	var time = document.getElementById("lecture_time").value;
+	var img = document.getElementById("lecture_img").value;
+
+	if(kind==''||title==''||teacher==''||diffi==''||time==''||img==''){
+		alert("모두 입력하세요!");
+		return false;
+	}else{
+		return true;
+	}
+}
+</script>
+</body>
+</html>

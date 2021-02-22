@@ -24,5 +24,9 @@ else if($mode =='modify'){
     header("Location: /lecture_board/board_list.html");
 }else if($mode=='write'){
     header("Location: /lecture_board/board_insert.html");
+}else if($mode=='admin'){
+    header("Location: /admin/index.php?page=1");
+}else if($mode=='lecture_insert'){
+    header("Location: /admin/lecture_insert.html");
 }
 ?>

@@ -25,7 +25,8 @@ function call_header(){
     <link type="text/css" rel="stylesheet" href="http://q.hackershrd.com/worksheet/css/main.css" /><!-- main페이지에만 호출 -->
     <link type="text/css" rel="stylesheet" href="http://q.hackershrd.com/worksheet/css/sub.css" /><!-- sub페이지에만 호출 -->
     <link type="text/css" rel="stylesheet" href="http://q.hackershrd.com/worksheet/css/login.css" /><!-- login페이지에만 호출 -->
-    
+    <link rel="stylesheet" href="/lecture_board/daumeditor/css/editor.css" type="text/css" charset="utf-8"/>
+    <script src="/lecture_board/daumeditor/js/editor_loader.js?environment=development" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/plugins/bxslider/jquery.bxslider.min.js"></script>
     <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/plugins/bxslider/bxslider.js"></script>
@@ -110,7 +111,7 @@ function call_body(){
                             <li class="mnu5">
                                 <a href="#">직무교육 안내</a>
                                 <ul class="nav-sub-lst">
-                                    <li><a href="index.php/?mode=list">수강후기</a></li>
+                                    <li><a href="/index.php/?mode=list">수강후기</a></li>
                                     <li><a href="#">서브메뉴</a></li>
                                     <li><a href="#">서브메뉴</a></li>
                                     <li><a href="#">서브메뉴</a></li>
@@ -153,6 +154,13 @@ function call_body(){
                             <a href="/member/login.html">로그인</a>
                             <a href="/index.php?mode=step_01">회원가입</a>
                             <a href="#">상담/고객센터</a>';
+                    }else if($_SESSION['userid']=='admin'){
+                        echo '
+                        <!-- 로그인후 -->
+                            <a href="/member/logout.php">로그아웃</a>
+                            <a href="/index.php?mode=modify">내정보</a>
+                            <a href="#">상담/고객센터</a>
+                            <a href="/index.php?mode=admin">관리자</a>';
                     }else{
                         echo '
                         <!-- 로그인후 -->
