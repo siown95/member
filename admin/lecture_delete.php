@@ -1,11 +1,20 @@
 <?php
 include "../db.php";
 $num = $_GET['num'];
-$query = "delete from lecture where lecture_num = $num";
+$query = "select lecture_img from lecture where lecture_num = $num";
 $result = mysqli_query($conn, $query);
-if($result){
-    echo '<script>alert("강의가 삭제되었습니다.");location.href="../index.php?mode=admin";</script>';
+$row = mysqli_fetch_array($result);
+$img = $row['lecture_img'];
+if(unlink($img)){
+    $query2 = "delete from lecture where lecture_num = $num";
+    $result = mysqli_query($conn, $query2);
+    if($result){
+        echo '<script>alert("강의가 삭제되었습니다.");location.href="../index.php?mode=admin";</script>';
+    }else{
+        echo '<script>alert("Fail.");history.back();</script>';
+    }
+    
 }else{
-    echo $query;
+    echo '<script>alert("Fail.");history.back();</script>';
 }
 ?>

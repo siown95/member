@@ -59,17 +59,19 @@ call_body();
                     $result = mysqli_query($conn, $query);
                     $total_record = mysqli_num_rows($result);
                     $list = 20;
-                    $page_count = 5;
-                    $page_num = ceil($page / $page_count);
-                    $page_start = (($page_num-1) * $page_count) + 1;
-                    $page_end = $page_start + $page_count - 1;
+                    $block_cnt = 5;
+
+                    $block_num = ceil($page / $block_cnt);
+                    $block_start = (($block_num-1) * $block_cnt) + 1;
+                    $block_end = $block_start + $block_cnt - 1;
+
                     $total_page = ceil($total_record / $list);
-                    if($page_end > $total_page){
-                        $page_end = $total_page;
+                    if($block_end > $total_page){
+                        $block_end = $total_page;
                     }
-                    $total_block = ceil($total_page / $page_count);
-                    $page_start = ($page - 1) * $list;
-                    $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $page_start, $list";
+                    $total_block = ceil($total_page / $block_cnt);
+                    $block_start = ($page - 1) * $list;
+                    $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $block_start, $list";
                     $result2 = mysqli_query($conn, $query2);
                     while($row = mysqli_fetch_array($result2)){
 						if($row == 0){
@@ -90,7 +92,7 @@ call_body();
 								<td>'.$lecture_num.'</td>
 								<td>'.$lecture_kind.'</td>
 								<td>
-									<a href="lecture_read.html?num='.$lecture_num.'">
+									<a href="lecture_read.html?page=1&num='.$lecture_num.'">
 									<span class="tc-gray ellipsis_line">'.$lecture_title.'</span>
 									</a>
 								</td>
@@ -109,31 +111,32 @@ call_body();
             
             <?php
             if($page <= 1){
-                echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
             }else{
                 echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
             }
             if($page <= 1){
-                echo '<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+               
             }else{
                 $pre = $page - 1;
                 echo '<a href="index.php?page='.$pre.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
             }
-            for($i=$page; $i<=$page_end;$i++){
-                if($page==$i){
-                    echo '<a href="index.php?page='.$i.'" class="active">'.$i.'</a>';
+            for($i = $block_start; $i <= $block_end; $i++){
+                if($page == $i){
+                    echo '<a class="active">'.$i.'</a>';
+                }else if($i==0){
+					
                 }else{
-                    echo '<a href="index.php?page='.$i.'">'.$i.'</a>';
-                }
+					echo "<a href='index.php?page=$i'>$i</a>";
+				}
             }
-            if($page >= $total_page){
-                echo '<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+            if($block_num >= $total_block){
+                
             }else{
                 $next = $page + 1;
                 echo '<a href="index.php?page='.$next.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
             }
             if($page >= $total_page){
-                echo '<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+                
             }else{
                 echo '<a href="index.php?page='.$total_page.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
             }

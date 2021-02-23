@@ -58,7 +58,7 @@ call_body();
                     $query = "select * from lecture";
                     $result = mysqli_query($conn, $query);
                     $total_record = mysqli_num_rows($result);
-                    $list = 20;
+                    $list = 5;
                     $page_count = 5;
                     $page_num = ceil($page / $page_count);
                     $page_start = (($page_num-1) * $page_count) + 1;

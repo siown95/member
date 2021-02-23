@@ -3,6 +3,11 @@ session_start();
 include "../call_index.php";
 include "../db.php";
 $num = $_GET['num'];
+if(isset($_GET['page'])){
+    $page = $_GET['page'];
+}else{
+    $page = 1;
+}
 $lecture_query = "select lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from lecture where lecture_num=$num";
 $lecture_result = mysqli_query($conn, $lecture_query);
 $lecture_row = mysqli_fetch_array($lecture_result);
@@ -83,9 +88,25 @@ call_body();
 	 
 			<tbody>
 				<?php		
-                    $query = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc";
+                    $query = "select * from lecture";
                     $result = mysqli_query($conn, $query);
-					while($row = mysqli_fetch_array($result)){
+                    $total_record = mysqli_num_rows($result);
+                    $list = 20;
+                    $block_cnt = 5;
+
+                    $block_num = ceil($page / $block_cnt);
+                    $block_start = (($block_num-1) * $block_cnt) + 1;
+                    $block_end = $block_start + $block_cnt - 1;
+
+                    $total_page = ceil($total_record / $list);
+                    if($block_end > $total_page){
+                        $block_end = $total_page;
+                    }
+                    $total_block = ceil($total_page / $block_cnt);
+                    $block_start = ($page - 1) * $list;
+                    $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $block_start, $list";
+                    $result2 = mysqli_query($conn, $query2);
+                    while($row = mysqli_fetch_array($result2)){
 						if($row == 0){
 							echo '
 							<tr class="bbs-sbj">
@@ -104,7 +125,7 @@ call_body();
 								<td>'.$lecture_num.'</td>
 								<td>'.$lecture_kind.'</td>
 								<td>
-									<a href="lecture_read.html?num='.$lecture_num.'">
+									<a href="lecture_read.html?page=1&num='.$lecture_num.'">
 									<span class="tc-gray ellipsis_line">'.$lecture_title.'</span>
 									</a>
 								</td>
@@ -120,16 +141,38 @@ call_body();
 		</table>
 
 		<div class="box-paging">
-			<a href="#"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
-			<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
-			<a href="#" class="active">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			<a href="#">6</a>
-			<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
-			<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+			<?php
+            if($page <= 1){
+            }else{
+                echo '<a href="lecture_read.html?page=1&num='.$lecture_num.'"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+            }
+            if($page <= 1){
+               
+            }else{
+                $pre = $page - 1;
+                echo '<a href="lecture_read.html?page='.$pre.'&num='.$lecture_num.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+            }
+            for($i = $block_start; $i <= $block_end; $i++){
+                if($page == $i){
+                    echo '<a class="active">'.$i.'</a>';
+                }else if($i==0){
+					
+                }else{
+					echo '<a href="lecture_read.html?page='.$pre.'&num='.$lecture_num.'">'.$i.'</a>';
+				}
+            }
+            if($block_num >= $total_block){
+                
+            }else{
+                $next = $page + 1;
+                echo '<a href="lecture_read.html?page='.$next.'&num='.$lecture_num.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+            }
+            if($page >= $total_page){
+                
+            }else{
+                echo '<a href="lecture_read.html?page='.$total_page.'&num='.$lecture_num.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+            }
+            ?>
 		</div>
 	</div>
 </div>
