@@ -163,7 +163,7 @@ call_body();
 					if(isset($kind)){
 						$query2 = "select board_num, board_title, board_satis, uname from board, member, lecture where board.id=member.id and lecture.lecture_num = board.lecture_num where lecture.lecture_kind='$kind' order by board_num desc limit $page_start, $list $currentLimit, $onePage";
 					}else{
-						$query2 = "select board_num, board_title, board_satis, uname from board, member where board.id=member.id order by board_num desc limit $page_start, $list $currentLimit, $onePage";
+						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.id=member.id and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
 					}	                    
                     $result2 = mysqli_query($conn, $query2);
                     while($row2 = mysqli_fetch_array($result2)){
@@ -171,16 +171,34 @@ call_body();
 						$board_title = $row2['board_title'];
 						$board_satis = $row2['board_satis'];
 						$uname = $row2['uname'];
+						$lecture_title = $row2['lecture_title'];
+						$lecture_kind = $row2['lecture_kind'];
 						echo '
 							<tr class="bbs-sbj">
 								<td>'.$board_num.'</td>
-								<td>'.$board_title.'</td>
+								<td>'.$lecture_kind.'</td>
 								<td>
-									<span class="tc-gray ellipsis_line">'.$board_satis.'</span>
+									<a href="#">
+									<span class="tc-gray ellipsis_line">수강 강의명 : '.$lecture_title.'</span>
+									<strong class="ellipsis_line">'.$board_title.'</strong>
+									</a>
 								</td>
 								<td>
-									<span class="tc-gray ellipsis_line">'.$uname.'</span>
+									<span class="star-rating">';
+										if($board_satis==5){
+										echo '<span class="star-inner" style="width:100%"></span>';	
+										}else if($board_satis==4){
+										echo '<span class="star-inner" style="width:80%"></span>';
+										}else if($board_satis==3){
+										echo '<span class="star-inner" style="width:60%"></span>';
+										}else if($board_satis==2){
+										echo '<span class="star-inner" style="width:40%"></span>';
+										}else{
+										echo '<span class="star-inner" style="width:20%"></span>';
+										}
+							echo'	</span>
 								</td>
+								<td class="last">'.$uname.'</td>
 							</tr>';
 						
 					}

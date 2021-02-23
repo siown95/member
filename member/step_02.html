@@ -2,8 +2,13 @@
 session_start();
 $_SESSION["pin"] = '123456';
 include "../call_index.php";
-call_header();
+call_doc();
 ?>
+<header>
+	<?php
+	call_header();
+	?>
+</header>
 <body>
 <?php 
 call_body();

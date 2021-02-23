@@ -1,7 +1,7 @@
 <?php
 	include "../call_index.php";
 	include "../db.php";
-	call_header();
+	call_doc();
 	session_start();
 	$pin = $_POST["pin"];
 	$phone1 = $_POST["phone1"];
@@ -23,6 +23,11 @@
 	}
 	mysqli_close($conn);
 ?>
+<header>
+	<?php
+	call_header();
+	?>
+</header>
 <body>
 <?php
 call_body();

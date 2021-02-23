@@ -1,9 +1,14 @@
 <?php
 include "../call_index.php";
-call_header();
+call_doc();
 session_start();
 session_destroy();
 ?>
+<header>
+	<?php
+	call_header();
+	?>
+</header>
 <body>
 <?php 
 call_body();
