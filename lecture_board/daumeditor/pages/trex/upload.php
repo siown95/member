@@ -88,7 +88,6 @@ $save_dir = '../../../../files/';
 	    var _attacher = getAttacher('file', _opener);
 	    registerAction(_attacher);
 
-
 		if (typeof(execAttach) == 'undefined') { //Virtual Function
 	        return;
 	    }
