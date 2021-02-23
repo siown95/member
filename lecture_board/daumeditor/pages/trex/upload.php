@@ -1,3 +1,11 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="./js/popup.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/popup.css" type="text/css"  charset="utf-8"/>
+</head>
+<body onload="initUploader();">
 <?php
 // 파일 업로드 
 $file_name = $_FILES['file_upload']['name'];                // 업로드한 파일명
@@ -7,7 +15,6 @@ $mimeType = $_FILES['file_upload']['type'];                 // 업로드한 파�
 
 // 이미지 파일이 저장될 서버 디렉토리 지정
 $save_dir = '../../../../files/';
-
 
 // 업로드 파일 확장자 검사 (필요시 추가)
    if($mimeType=="html" || 
@@ -70,3 +77,32 @@ $save_dir = '../../../../files/';
 	$real_size : 파일 크기(byte)
 */
 ?>
+<script type="text/javascript">
+	function initUploader(){
+	    var _opener = PopupUtil.getOpener();
+	    if (!_opener) {
+	        alert('잘못된 경로로 접근하셨습니다.');
+	        return;
+	    }
+	    
+	    var _attacher = getAttacher('file', _opener);
+	    registerAction(_attacher);
+
+
+		if (typeof(execAttach) == 'undefined') { //Virtual Function
+	        return;
+	    }
+		
+        var _mockdata = {
+            'attachurl': '<?php echo $dest_url; ?>',
+			'filemime': '<?php echo $mimeType; ?>',
+            'filename': '<?php echo $change_file_name; ?>',
+            'filesize': <?php echo $file_size; ?>
+        };
+		execAttach(_mockdata);
+		closeWindow();	
+	}
+</script>
+<!-- https://kiwinote.tistory.com/32 -->
+</body>
+</html>
