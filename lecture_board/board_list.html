@@ -11,7 +11,7 @@ if(isset($_GET['page'])){
 }
 if(isset($_GET['kind'])){
     $kind = $_GET['kind'];
-	$query = "select board_num from board where lecture_kind='$kind' order by board_num desc";
+	$query = "select board_num from board, lecture where board.lecture_num=lecture.lecture_num and lecture_kind='$kind' order by board_num desc";
 }else{
 	$query = "select board_num from board order by board_num desc";
 }
@@ -166,11 +166,15 @@ call_body();
 						</tr>';
 					}	
 					if(isset($kind)){
-						$query2 = "select board_num, board_title, board_satis, uname from board, member, lecture where board.id=member.id and lecture.lecture_num = board.lecture_num where lecture.lecture_kind='$kind' order by board_num desc limit $page_start, $list $currentLimit, $onePage";
+						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
+						where board.id=member.id and lecture.lecture_num = board.lecture_num and lecture.lecture_kind='$kind' order by board_num desc limit $currentLimit, $onePage";
 					}else{
-						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.id=member.id and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
-					}	                    
+						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
+						where board.id=member.id and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
+					}	                   
                     $result2 = mysqli_query($conn, $query2);
+					$count = mysqli_num_rows($result2);
+					$i = $count;
                     while($row2 = mysqli_fetch_array($result2)){
 						$board_num = $row2['board_num'];
 						$board_title = $row2['board_title'];
@@ -180,7 +184,7 @@ call_body();
 						$lecture_kind = $row2['lecture_kind'];
 						echo '
 							<tr class="bbs-sbj">
-								<td>'.$board_num.'</td>
+								<td>'.$i--.'</td>
 								<td>'.$lecture_kind.'</td>
 								<td>
 									<a href="board_read.html?page=1&num='.$board_num.'">

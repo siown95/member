@@ -15,7 +15,7 @@
 	    }
 		
 		var _mockdata = {
-			'attachurl': 'http://cfile297.uf.daum.net/attach/207C8C1B4AA4F5DC01A644',
+			'attachurl': 'http://test.hackers.com/files',
 			'filemime': 'image/gif',
 			'filename': 'editor_bi.gif',
 			'filesize': 640
@@ -43,13 +43,15 @@
 		<h1>파일 첨부</h1>
 	</div>	
 	<div class="body">
-		<dl class="alert">
-		    <dt>파일 첨부 확인</dt>
-		    <dd>
-		    	확인을 누르시면 임시 데이터가 파일첨부 됩니다.<br /> 
-				인터페이스는 소스를 확인해주세요.
-			</dd>
-		</dl>
+		<form name="file_upload" id="file_upload" action="/pages/trex/file.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<dl class="alert">
+				<dt>파일 첨부 하기</dt>
+				<dd>
+				<input type="hidden" name="uploaded" value="upload_now">
+				<input type="file" name="attache_file" size="30">
+				</dd>
+			</dl>
+		</form>
 	</div>
 	<div class="footer">
 		<p><a href="#" onclick="closeWindow();" title="닫기" class="close">닫기</a></p>

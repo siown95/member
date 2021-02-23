@@ -48,7 +48,7 @@ call_body();
 				<col style="width:15%"/>
 				<col style="*"/>
 			</colgroup>
-            <form name="tx_editor_form" id="tx_editor_form" action="board_update.php" method="post" accept-charset="utf-8">
+            <form name="tx_editor_form" id="tx_editor_form" action="board_update.php?num=<?php echo $num ?>" method="post" accept-charset="utf-8">
 			<tbody>
 				<tr>
 					<th scope="col">강의</th>
@@ -692,6 +692,31 @@ call_body();
             }
         </script>
         <!-- End: Saving Contents -->
+		<textarea id="sample_contents_source" style="display:none;">
+			<?php echo $board_content ?>
+		</textarea>
+		<script type="text/javascript">
+			function loadContent() {
+				var attachments = {};
+				
+				/* 저장된 컨텐츠를 불러오기 위한 함수 호출 */
+				Editor.modify({
+					"attachments": function () { /* 저장된 첨부가 있을 경우 배열로 넘김, 위의 부분을 수정하고 아래 부분은 수정없이 사용 */
+						var allattachments = [];
+						for (var i in attachments) {
+							allattachments = allattachments.concat(attachments[i]);
+						}
+						return allattachments;
+					}(),
+					"content": document.getElementById("sample_contents_source") /* 내용 문자열, 주어진 필드(textarea) 엘리먼트 */
+				});
+			}
+		</script>
+		<script>
+			$(document).ready(function() { 
+				loadContent();
+			});
+		</script>
 		<div class="box-btn t-r">
 			<a href="/index.php?mode=list" class="btn-m-gray">목록</a>
 			<input type="submit" class="btn-m ml5" onclick='saveContent()' value="수정">
