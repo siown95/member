@@ -5,36 +5,20 @@
 <script src="./js/popup.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="./css/popup.css" type="text/css"  charset="utf-8"/>
 </head>
-<body onload="initUploader();">
+<body onload="initUploader();">	
+
 <?php
 // 파일 업로드 
-$file_name = $_FILES['file_upload']['name'];                // 업로드한 파일명
-$file_tmp_name = $_FILES['file_upload']['tmp_name'];   		// 임시 디렉토리에 저장된 파일명
-$file_size = $_FILES['file_upload']['size'];                // 업로드한 파일의 크기
-$mimeType = $_FILES['file_upload']['type'];                 // 업로드한 파일의 MIME Type
-
+$file_name = $_FILES['upload_file']['name'];                // 업로드한 파일명
+$file_tmp_name = $_FILES['upload_file']['tmp_name'];   // 임시 디렉토리에 저장된 파일명
+$file_size = $_FILES['upload_file']['size'];                 // 업로드한 파일의 크기
+$mimeType = $_FILES['upload_file']['type'];                 // 업로드한 파일의 MIME Type
 // 이미지 파일이 저장될 서버 디렉토리 지정
-$save_dir = '../../../../files/';
-
+$save_dir = '../../files/';
 // 업로드 파일 확장자 검사 (필요시 추가)
-   if($mimeType=="html" || 
-   $mimeType=="htm" || 
-   $mimeType=="php" || 
-   $mimeType=="php3" || 
-   $mimeType=="inc" || 
-   $mimeType=="pl" || 
-   $mimeType=="cgi" || 
-   $mimeType=="txt" || 
-   $mimeType=="TXT" || 
-   $mimeType=="asp" || 
-   $mimeType=="jsp" || 
-   $mimeType=="phtml" || 
-   $mimeType=="js" || 
-   $mimeType=="") { 
-		echo("<script> 
-		alert('업로드를 할 수 없는 파일형식입니다.'); 
-		document.location.href = './file.html';    
-		</script>"); 
+   if($mimeType=="html" || $mimeType=="htm" || $mimeType=="php" || $mimeType=="php3" || $mimeType=="inc" || $mimeType=="pl" || $mimeType=="cgi" 
+   || $mimeType=="txt" || $mimeType=="TXT" || $mimeType=="asp" || $mimeType=="jsp" || $mimeType=="phtml" || $mimeType=="js" || $mimeType=="") { 
+		echo '<script> alert("업로드를 할 수 없는 파일형식입니다."); document.location.href = "./file.html"; </script>'; 
 		exit;
    } 
    
@@ -76,8 +60,12 @@ $save_dir = '../../../../files/';
 	$real_name : 원래 파일명. 예: 풍경사진.gif 
 	$real_size : 파일 크기(byte)
 */
+
 ?>
+
+
 <script type="text/javascript">
+// <![CDATA[
 	function initUploader(){
 	    var _opener = PopupUtil.getOpener();
 	    if (!_opener) {
@@ -87,6 +75,7 @@ $save_dir = '../../../../files/';
 	    
 	    var _attacher = getAttacher('file', _opener);
 	    registerAction(_attacher);
+
 
 		if (typeof(execAttach) == 'undefined') { //Virtual Function
 	        return;
@@ -99,9 +88,9 @@ $save_dir = '../../../../files/';
             'filesize': <?php echo $file_size; ?>
         };
 		execAttach(_mockdata);
-		closeWindow();	
+		closeWindow();
 	}
+// ]]>
 </script>
-<!-- https://kiwinote.tistory.com/32 -->
 </body>
 </html>

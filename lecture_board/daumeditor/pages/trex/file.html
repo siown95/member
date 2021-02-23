@@ -16,9 +16,9 @@
 		
 		var _mockdata = {
 			'attachurl': 'http://cfile297.uf.daum.net/attach/207C8C1B4AA4F5DC01A644',
-			'filemime': '../../../files',
-			'filename': '',
-			'filesize': 
+			'filemime': 'image/gif',
+			'filename': 'editor_bi.gif',
+			'filesize': 640
 		};
 		execAttach(_mockdata);
 		closeWindow();
@@ -43,24 +43,18 @@
 		<h1>파일 첨부</h1>
 	</div>	
 	<div class="body">
-		<form name="file_upload" id="file_upload" action="upload.php" method="post" enctype="multipart/form-data">
-			<dl class="alert">
-				<dt>파일 첨부 하기</dt>
-				<dd>
-				<label><input type="text" id="file_name" name="file_upload" style="width: 200px;" readonly=""></label>
-				<label for="file"><span class="btn_set01">찾기</span></label>
-				<input type="file" name="file_upload" id="file" onchange="javascript: document.getElementById('file_name').value = this.value;" style="display: none">
-				</dd>
-				<input type="submit" value="업로드">
-			</dl>
+
+		<div>
+		<form method="post" enctype="multipart/form-data" action="../../upload.php">
+		<input type="file" name="upload_file"> 
+		<input type="submit" value="업로드">
 		</form>
+		</div>	
+		
+		
 	</div>
 	<div class="footer">
 		<p><a href="#" onclick="closeWindow();" title="닫기" class="close">닫기</a></p>
-		<ul>
-			<li class="submit"><a href="#" onclick="done();" title="등록" class="btnlink">등록</a> </li>
-			<li class="cancel"><a href="#" onclick="closeWindow();" title="취소" class="btnlink">취소</a></li>
-		</ul>
 	</div>
 </div>
 </body>
