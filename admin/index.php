@@ -1,7 +1,7 @@
 <?php
 include "../call_index.php";
 include "../db.php";
-call_header();
+call_doc();
 session_start();
 if($_SESSION['userid']==''){
 	echo '<script>alert("관리자 로그인이 필요합니다.");location.href="/member/login.html";</script>';
@@ -65,6 +65,11 @@ if($page != $allPage){
 }
 $currentLimit = ($onePage * $page) - $onePage;
 ?>
+<head>
+	<?php
+		call_header();
+	?>
+</head>
 <body>
 <?php
 call_body();

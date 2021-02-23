@@ -1,7 +1,7 @@
 <?php
 include "../call_index.php";
 include "../db.php";
-call_header();
+call_doc();
 session_start();
 $_SESSION['pin'] = '123456';
 $radio = $_POST['radio'];
@@ -42,6 +42,11 @@ if($pin != $_SESSION['pin']){
 }
 mysqli_close($conn);
 ?>
+<head>
+	<?php
+	call_header();
+	?>
+</head>
 <body>
 <?php 
 call_body();

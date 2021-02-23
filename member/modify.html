@@ -1,7 +1,7 @@
 <?php
 include "../call_index.php";
 include "../db.php";
-call_header();
+call_doc();
 session_start();
 $id = $_SESSION['userid'];
 $query = "select uname, phone from member where id='$id'";
@@ -11,6 +11,11 @@ $name = $row['uname'];
 $phone = $row['phone'];
 mysqli_close($conn);
 ?>
+<head>
+	<?php
+	call_header();
+	?>
+</head>
 <body>
 <?php
 call_body();

@@ -1,11 +1,17 @@
 <?php
 include "../call_index.php";
 include "../db.php";
-call_header();
+call_doc();
 session_start();
 $query = "select lecture_num, lecture_title from lecture";
 $result = mysqli_query($conn, $query);
 ?>
+<head>
+	<?php
+		call_header();
+        call_daumEditor();
+	?>
+</head>
 <body>
 <?php
 call_body();

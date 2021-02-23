@@ -2,7 +2,7 @@
 session_start();
 include "../call_index.php";
 include "../db.php";
-call_header();
+call_doc();
 $num = $_GET['num'];
 $lecture_query = "select lecture_kind, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from lecture where lecture_num=$num";
 $lecture_result = mysqli_query($conn, $lecture_query);
@@ -14,11 +14,15 @@ $lecture_diffi = $lecture_row['lecture_diffi'];
 $lecture_time = $lecture_row['lecture_time'];
 $lecture_img = $lecture_row['lecture_img'];
 ?>
+<head>
+	<?php
+		call_header();
+	?>
+</head>
 <body>
 <?php
 call_body();
 ?>
-
 <div id="container" class="container">
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">
 			<caption class="hidden">강의정보</caption>

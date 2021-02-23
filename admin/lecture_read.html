@@ -63,8 +63,13 @@ if($page != $allPage){
 	$paging .= '<a href="lecture_read.html?page='.$allPage.'&num='.$num.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
 }
 $currentLimit = ($onePage * $page) - $onePage;
-call_header();
+call_doc();
 ?>
+<head>
+	<?php
+		call_header();
+	?>
+</head>
 <body>
 <?php
 call_body();
