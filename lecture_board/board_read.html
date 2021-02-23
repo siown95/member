@@ -1,6 +1,73 @@
 <?php
+include "../db.php";
 include "../call_index.php";
+session_start();
 call_doc();
+$num = $_GET['num'];
+if(isset($_GET['page'])){
+    $page = $_GET['page'];
+}else{
+    $page = 1;
+}
+$board_query = "select board_title, board_content, board_satis, id, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from board, lecture where board.lecture_num=lecture.lecture_num and board_num=$num";
+$board_result = mysqli_query($conn, $board_query);
+$board_row = mysqli_fetch_array($board_result);
+$board_title = $board_row['board_title'];
+$board_content = $board_row['board_content'];
+$board_satis = $board_row['board_satis'];
+$id = $board_row['id'];
+$lecture_title = $board_row['lecture_title'];
+$lecture_teacher = $board_row['lecture_teacher'];
+$lecture_diffi = $board_row['lecture_diffi'];
+$lecture_time = $board_row['lecture_time'];
+$lecture_img = $board_row['lecture_img'];
+
+$query = "select board_num from board order by board_num desc";
+$result = mysqli_query($conn, $query);
+$row = mysqli_num_rows($result);
+					
+$allPost = $row;
+				
+$onePage = 5;
+$allPage = ceil($allPost / $onePage);
+					
+if($page < 1 || ($allPage && $page > $allPage)){
+	echo '<script>alert("존재하지 않는 페이지 입니다.");history.back();</script>';
+	exit;
+}					
+$oneSection = 5;
+$currentSection = ceil($page / $oneSection);
+$allSection = ceil($allPage / $oneSection);
+$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+if($currentSection == $allSection){
+	$lastPage = $allPage;
+}else{
+	$lastPage = $currentSection * $oneSection;
+}		
+$prevPage = $page - 1 ;
+$nextPage = $page + 1;
+
+$paging = '';
+if($page != 1){
+	$paging .= '<a href="board_read.html?page=1&num='.$num.'"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+}
+if($page != 1){
+	$paging .= '<a href="board_read.html?page=.$prevPage.&num='.$num.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+}
+for($i=$firstPage; $i<=$lastPage; $i++){
+	if($i==$page){
+		$paging .= '<a class="active">'.$i.'</a>';
+	}else{
+		$paging .= '<a href="board_read.html?page='.$i.'&num='.$num.'">'.$i.'</a>';
+	}
+}
+if($page != $lastPage){
+	$paging .= '<a href="board_read.html?page='.$nextPage.'&num='.$num.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+}
+if($page != $allPage){
+	$paging .= '<a href="board_read.html?page='.$allPage.'&num='.$num.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+}
+$currentLimit = ($onePage * $page) - $onePage;
 ?>
 <head>
 	<?php
@@ -24,28 +91,38 @@ call_body();
 			</colgroup>
 			<tbody>
 				 <tr>
-					<th scope="col">제목</th>
-					<th scope="col" class="user-id">작성자 | idididi**</th>
+					<th scope="col"><?php echo $board_title ?></th>
+					<th scope="col" class="user-id">작성자 | <?php echo $id?></th>
 				 </tr>
 				<tr>
 					<td colspan="2">
 						<div class="box-rating">
 							<span class="tit_rating">강의만족도</span>
 							<span class="star-rating">
-								<span class="star-inner" style="width:80%"></span>
+								<?php
+								if($board_satis == 5){
+									echo '<span class="star-inner" style="width:100%"></span>';
+								}else if($board_satis == 4){
+									echo '<span class="star-inner" style="width:80%"></span>';
+								}else if($board_satis == 4){
+									echo '<span class="star-inner" style="width:60%"></span>';
+								}else if($board_satis == 4){
+									echo '<span class="star-inner" style="width:40%"></span>';
+								}else{
+									echo '<span class="star-inner" style="width:20%"></span>';
+								}
+								?>
 							</span>
 						</div>
 						
-						절대 후회 없는 강의예요!<br />
-						강의시간도 적당하고 요점만 잘 잡아서 설명해주시네요!<br />
-						조직에서 관리직을 담당하고 계신 분이라면 꼭 추천합니다. <br />
+						<?php echo $board_content;?>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
 		
-		<p class="mb15"><strong class="tc-brand fs16">dlwlsl**님의 수강하신 강의 정보</strong></p>
+		<p class="mb15"><strong class="tc-brand fs16"><?php echo $id?>님의 수강하신 강의 정보</strong></p>
 		
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-lecture-list">
 			<caption class="hidden">강의정보</caption>
@@ -58,13 +135,13 @@ call_body();
 				<tr>
 					<td>
 						<a href="#" class="sample-lecture">
-							<img src="http://via.placeholder.com/144x101" alt="" width="144" height="101" />
+							<img src=<?php echo $lecture_img ?> alt="" width="144" height="101" />
 							<span class="tc-brand">샘플강의 ▶</span>
 						</a>
 					</td>
 					<td class="lecture-txt">
-						<em class="tit mt10">Beyond Trouble, 조직을 감동시키는 관계의 기술</em>
-						<p class="tc-gray mt20">강사: 최환규 | 학습난이도 : 하 | 교육시간: 18시간 (18강)</p>
+						<em class="tit mt10"><?php echo $lecture_title ?></em>
+						<p class="tc-gray mt20">강사: <?php echo $lecture_teacher ?> | 학습난이도 : <?php echo $lecture_diffi ?> | 교육시간: <?php echo $lecture_time ?></p>
 					</td>
 					<td class="t-r"><a href="#" class="btn-square-line">강의<br />상세</a></td>
 				</tr>
@@ -72,9 +149,15 @@ call_body();
 		</table>
 
 		<div class="box-btn t-r">
-			<a href="#" class="btn-m-gray">목록</a>
-			<a href="#" class="btn-m ml5">수정</a>
-			<a href="#" class="btn-m-dark">삭제</a>
+			<a href="/index.php?mode=list" class="btn-m-gray">목록</a>
+			<?php
+			if($id == $_SESSION['userid']){
+				echo '
+				<a href="board_update.html?num='.$num.'" class="btn-m ml5">수정</a>
+				<a href="board_delete.php?num='.$num.'" class="btn-m-dark">삭제</a>
+				';
+			}
+			?>
 		</div>
 
 		<div class="search-info">
@@ -112,38 +195,65 @@ call_body();
 			</thead>
 	 
 			<tbody>
-				<!-- set -->
-				<tr class="bbs-sbj">
-					<td>1</td>
-					<td>CS</td>
-					<td>
-						<a href="#">
-							<span class="tc-gray ellipsis_line">수강 강의명 : Beyond Trouble, 조직을 감동시키는 관계의 기술</span>
-							<strong class="ellipsis_line">절대 후회 없는 강의 예요!</strong>
-						</a>
-					</td>
-					<td>
-						<span class="star-rating">
-							<span class="star-inner" style="width:80%"></span>
-						</span>
-					</td>
-					<td class="last">이름</td>
-				</tr>
-				<!-- //set -->
+				<?php
+					if($row == 0){
+					echo '
+						<tr class="bbs-sbj">
+							<td colspan="5" class="last">
+								등록된 후기가 없습니다!
+							</td>
+						</tr>';
+					}	
+					if(isset($kind)){
+						$query2 = "select board_num, board_title, board_satis, uname from board, member, lecture where board.id=member.id and lecture.lecture_num = board.lecture_num where lecture.lecture_kind='$kind' order by board_num desc limit $page_start, $list $currentLimit, $onePage";
+					}else{
+						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.id=member.id and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
+					}	                    
+                    $result2 = mysqli_query($conn, $query2);
+                    while($row2 = mysqli_fetch_array($result2)){
+						$board_num = $row2['board_num'];
+						$board_title = $row2['board_title'];
+						$board_satis = $row2['board_satis'];
+						$uname = $row2['uname'];
+						$lecture_title = $row2['lecture_title'];
+						$lecture_kind = $row2['lecture_kind'];
+						echo '
+							<tr class="bbs-sbj">
+								<td>'.$board_num.'</td>
+								<td>'.$lecture_kind.'</td>
+								<td>
+									<a href="board_read.html?page=1&num='.$board_num.'">
+									<span class="tc-gray ellipsis_line">수강 강의명 : '.$lecture_title.'</span>
+									<strong class="ellipsis_line">'.$board_title.'</strong>
+									</a>
+								</td>
+								<td>
+									<span class="star-rating">';
+										if($board_satis==5){
+										echo '<span class="star-inner" style="width:100%"></span>';	
+										}else if($board_satis==4){
+										echo '<span class="star-inner" style="width:80%"></span>';
+										}else if($board_satis==3){
+										echo '<span class="star-inner" style="width:60%"></span>';
+										}else if($board_satis==2){
+										echo '<span class="star-inner" style="width:40%"></span>';
+										}else{
+										echo '<span class="star-inner" style="width:20%"></span>';
+										}
+							echo'	</span>
+								</td>
+								<td class="last">'.$uname.'</td>
+							</tr>';
+						
+					}
+				?>
 			</tbody>
 		</table>
 
 		<div class="box-paging">
-			<a href="#"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
-			<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
-			<a href="#" class="active">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			<a href="#">6</a>
-			<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
-			<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+			<?php
+				echo $paging;
+			?>
 		</div>
 	</div>
 </div>

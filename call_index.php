@@ -211,7 +211,7 @@ function call_lnb(){
 			<li><a href="#">사업주훈련</a></li>
 			<li><a href="#">근로자카드</a></li>
 			<li><a href="#">학습안내</a></li>
-			<li class="on"><a href="#">수강후기</a></li>
+			<li class="on"><a href="/index.php?mode=list">수강후기</a></li>
 		</ul>
 	</div>
     <div id="content" class="content">
