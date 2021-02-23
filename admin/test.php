@@ -13,6 +13,52 @@ if(isset($_GET['page'])){
 }else{
     $page = 1;
 }
+$query = "select lecture_num from lecture order by lecture_num desc";
+$result = mysqli_query($conn, $query);
+$row = mysqli_num_rows($result);
+					
+$allPost = $row;
+				
+$onePage = 5;
+$allPage = ceil($allPost / $onePage);
+					
+if($page < 1 || ($allPage && $page > $allPage)){
+	echo '<script>alert("존재하지 않는 페이지 입니다.");history.back();</script>';
+	exit;
+}					
+$oneSection = 5;
+$currentSection = ceil($page / $oneSection);
+$allSection = ceil($allPage / $oneSection);
+$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+if($currentSection == $allSection){
+	$lastPage = $allPage;
+}else{
+	$lastPage = $currentSection * $oneSection;
+}		
+$prevPage = $page - 1 ;
+$nextPage = $page + 1;
+
+$paging = '';
+if($page != 1){
+	$paging .= '<a href="test.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+}
+if($currentSection != 1){
+	$paging .= '<a href="test.php?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+}
+for($i=$firstPage; $i<=$lastPage; $i++){
+	if($i==$page){
+		$paging .= '<a class="active">'.$i.'</a>';
+	}else{
+		$paging .= '<a href="test.php?page='.$i.'">'.$i.'</a>';
+	}
+}
+if($currentSection != $allSection){
+	$paging .= '<a href="test.php?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+}
+if($page != $allPage){
+	$paging .= '<a href="test.php?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+}
+$currentLimit = ($onePage * $page) - $onePage;
 ?>
 <body>
 <?php
@@ -55,21 +101,8 @@ call_body();
 	 
 			<tbody>
 				<?php		
-                    $query = "select * from lecture";
-                    $result = mysqli_query($conn, $query);
-                    $total_record = mysqli_num_rows($result);
-                    $list = 5;
-                    $page_count = 5;
-                    $page_num = ceil($page / $page_count);
-                    $page_start = (($page_num-1) * $page_count) + 1;
-                    $page_end = $page_start + $page_count - 1;
-                    $total_page = ceil($total_record / $list);
-                    if($page_end > $total_page){
-                        $page_end = $total_page;
-                    }
-                    $total_block = ceil($total_page / $page_count);
-                    $page_start = ($page - 1) * $list;
-                    $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $page_start, $list";
+                    
+                    $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $currentLimit, $onePage";
                     $result2 = mysqli_query($conn, $query2);
                     while($row = mysqli_fetch_array($result2)){
 						if($row == 0){
@@ -108,35 +141,7 @@ call_body();
 		<div class="box-paging">
             
             <?php
-            if($page <= 1){
-                echo '<a href="test.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-            }else{
-                echo '<a href="test.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-            }
-            if($page <= 1){
-                echo '<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-            }else{
-                $pre = $page - 1;
-                echo '<a href="test.php?page='.$pre.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-            }
-            for($i=$page; $i<=$page_end;$i++){
-                if($page==$i){
-                    echo '<a href="test.php?page='.$i.'" class="active">'.$i.'</a>';
-                }else{
-                    echo '<a href="test.php?page='.$i.'">'.$i.'</a>';
-                }
-            }
-            if($page >= $total_page){
-                echo '<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-            }else{
-                $next = $page + 1;
-                echo '<a href="test.php?page='.$next.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-            }
-            if($page >= $total_page){
-                echo '<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-            }else{
-                echo '<a href="test.php?page='.$total_page.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-            }
+				echo $paging;
             ?>
 		</div>
 

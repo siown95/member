@@ -3,15 +3,68 @@ include "../call_index.php";
 include "../db.php";
 call_header();
 session_start();
-if($_SESSION['userid']==''){
-	echo '<script>alert("로그인이 필요합니다.");location.href="/member/login.html";</script>';
-}
 $kind = $_GET['kind'];
 if(isset($_GET['page'])){
     $page = $_GET['page'];
 }else{
     $page = 1;
 }
+if(isset($_GET['kind'])){
+    $kind = $_GET['kind'];
+	$query = "select board_num from board where lecture_kind='$kind' order by board_num desc";
+}else{
+	$query = "select board_num from board order by board_num desc";
+}
+$result = mysqli_query($conn, $query);
+$row = mysqli_num_rows($result);
+					
+$allPost = $row;
+				
+$onePage = 20;
+$allPage = ceil($allPost / $onePage);
+					
+if($page < 1 || ($allPage && $page > $allPage)){
+	echo '<script>alert("존재하지 않는 페이지 입니다.");history.back();</script>';
+	exit;
+}					
+$oneSection = 5;
+$currentSection = ceil($page / $oneSection);
+$allSection = ceil($allPage / $oneSection);
+$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+if($currentSection == $allSection){
+	$lastPage = $allPage;
+}else{
+	$lastPage = $currentSection * $oneSection;
+}		
+$prevPage = $page - 1 ;
+$nextPage = $page + 1;
+
+$paging = '';
+if($row == 0){
+	$paging = '<a class="active">1</a>';
+}else{
+	if($page != 1){
+		$paging .= '<a href="board_list.html?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+	}
+	if($page != 1){
+		$paging .= '<a href="board_list.html?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+	}
+	for($i=$firstPage; $i<=$lastPage; $i++){
+		if($i==$page){
+			$paging .= '<a class="active">'.$i.'</a>';
+		}else{
+			$paging .= '<a href="board_list.html?page='.$i.'">'.$i.'</a>';
+		}
+	}
+	if($page != $lastPage){
+		$paging .= '<a href="board_list.html?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+	}
+	if($page != $allPage){
+		$paging .= '<a href="board_list.html?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+	}
+	$currentLimit = ($onePage * $page) - $onePage;
+}
+
 ?>
 <body>
 <?php
@@ -98,48 +151,38 @@ call_body();
 			</thead>
 	 
 			<tbody>
-				<?php		
-                    $query = "select * from board";
-                    $result = mysqli_query($conn, $query);
-                    $total_record = mysqli_num_rows($result);
-                    $list = 20;
-                    $page_count = 5;
-                    $page_num = ceil($page / $page_count);
-                    $page_start = (($page_num-1) * $page_count) + 1;
-                    $page_end = $page_start + $page_count - 1;
-                    $total_page = ceil($total_record / $list);
-                    if($page_end > $total_page){
-                        $page_end = $total_page;
-                    }
-                    $total_block = ceil($total_page / $page_count);
-                    $page_start = ($page - 1) * $list;
-                    $query2 = "select board_num, board_title, board_satis, uname from board, member where board.id=member.id order by board_num desc limit $page_start, $list";
-                    $result2 = mysqli_query($conn, $query2);
-                    while($row = mysqli_fetch_array($result2)){
+				<?php
 					if($row == 0){
-						echo '
+					echo '
 						<tr class="bbs-sbj">
 							<td colspan="5" class="last">
-								등록된 강의가 없습니다!
+								등록된 후기가 없습니다!
 							</td>
 						</tr>';
+					}	
+					if(isset($kind)){
+						$query2 = "select board_num, board_title, board_satis, uname from board, member, lecture where board.id=member.id and lecture.lecture_num = board.lecture_num where lecture.lecture_kind='$kind' order by board_num desc limit $page_start, $list $currentLimit, $onePage";
 					}else{
-						$board_num = $row['board_num'];
-						$board_title = $row['board_title'];
-						$board_satis = $row['board_satis'];
-						$uname = $row['uname'];
+						$query2 = "select board_num, board_title, board_satis, uname from board, member where board.id=member.id order by board_num desc limit $page_start, $list $currentLimit, $onePage";
+					}	                    
+                    $result2 = mysqli_query($conn, $query2);
+                    while($row2 = mysqli_fetch_array($result2)){
+						$board_num = $row2['board_num'];
+						$board_title = $row2['board_title'];
+						$board_satis = $row2['board_satis'];
+						$uname = $row2['uname'];
 						echo '
 							<tr class="bbs-sbj">
-							<td>'.$board_num.'</td>
-							<td>'.$board_title.'</td>
-							<td>
-								<span class="tc-gray ellipsis_line">'.$board_satis.'</span>
-							</td>
-							<td>
-							<span class="tc-gray ellipsis_line">'.$uname.'</span>
-							</td>
+								<td>'.$board_num.'</td>
+								<td>'.$board_title.'</td>
+								<td>
+									<span class="tc-gray ellipsis_line">'.$board_satis.'</span>
+								</td>
+								<td>
+									<span class="tc-gray ellipsis_line">'.$uname.'</span>
+								</td>
 							</tr>';
-						}
+						
 					}
 				?>
 			</tbody>
@@ -147,40 +190,16 @@ call_body();
 
 		<div class="box-paging">
 			<?php
-            if($page <= 1){
-                echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-            }else{
-                echo '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-            }
-            if($page <= 1){
-                echo '<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-            }else{
-                $pre = $page - 1;
-                echo '<a href="index.php?page='.$pre.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-            }
-            for($i=$page; $i<=$page_end;$i++){
-                if($page==$i){
-                    echo '<a href="index.php?page='.$i.'" class="active">'.$i.'</a>';
-                }else{
-                    echo '<a href="index.php?page='.$i.'">'.$i.'</a>';
-                }
-            }
-            if($page >= $total_page){
-                echo '<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-            }else{
-                $next = $page + 1;
-                echo '<a href="index.php?page='.$next.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-            }
-            if($page >= $total_page){
-                echo '<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-            }else{
-                echo '<a href="index.php?page='.$total_page.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-            }
-            ?>
+				echo $paging;
+			?>
 		</div>
 
 		<div class="box-btn t-r">
-			<a href="../index.php?mode=write" class="btn-m">후기 작성</a>
+			<?php
+			if(isset($_SESSION['userid'])){
+				echo '<a href="../index.php?mode=write" class="btn-m">후기 작성</a>';
+			}
+			?>
 		</div>
 	</div>
 </div>
