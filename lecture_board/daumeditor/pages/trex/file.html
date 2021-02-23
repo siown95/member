@@ -15,10 +15,10 @@
 	    }
 		
 		var _mockdata = {
-			'attachurl': 'http://test.hackers.com/files',
-			'filemime': 'image/gif',
-			'filename': 'editor_bi.gif',
-			'filesize': 640
+			'attachurl': 'http://cfile297.uf.daum.net/attach/207C8C1B4AA4F5DC01A644',
+			'filemime': '../../../files',
+			'filename': '',
+			'filesize': 
 		};
 		execAttach(_mockdata);
 		closeWindow();
@@ -43,13 +43,15 @@
 		<h1>파일 첨부</h1>
 	</div>	
 	<div class="body">
-		<form name="file_upload" id="file_upload" action="/pages/trex/file.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+		<form name="file_upload" id="file_upload" action="upload.php" method="post" enctype="multipart/form-data">
 			<dl class="alert">
 				<dt>파일 첨부 하기</dt>
 				<dd>
-				<input type="hidden" name="uploaded" value="upload_now">
-				<input type="file" name="attache_file" size="30">
+				<label><input type="text" id="file_name" name="file_upload" style="width: 200px;" readonly=""></label>
+				<label for="file"><span class="btn_set01">찾기</span></label>
+				<input type="file" name="file_upload" id="file" onchange="javascript: document.getElementById('file_name').value = this.value;" style="display: none">
 				</dd>
+				<input type="submit" value="업로드">
 			</dl>
 		</form>
 	</div>
