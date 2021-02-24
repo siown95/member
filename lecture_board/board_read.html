@@ -297,5 +297,20 @@ $currentLimit = ($onePage * $page) - $onePage;
 include "../footer.php";
 ?>
 </div>
+<script>
+	function submitChk(){
+		var title = document.getElementById("title").value;
+		if(title == ''){
+			alert("강의명을 입력하세요!");
+			return false;
+		}else if(title.length<2){
+			alert("2글자 이상 입력하세요!");
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+</script>
 </body>
 </html>
