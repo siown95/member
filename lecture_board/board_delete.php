@@ -14,7 +14,7 @@ if($row==0){
     }
 }else{
     $file = $row['board_file'];
-    $file_dir = '../files/'.$file;
+    $file_dir = '../files/board_img/'.$file;
     unlink($file_dir);
     $query = "delete from board where board_num=$num";
     $result = mysqli_query($conn, $query);

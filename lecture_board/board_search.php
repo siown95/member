@@ -16,21 +16,17 @@ if($select == '강의명'){
     if(!empty($kind)){
         $query = "select board_num from board, lecture 
         where board.lecture_num=lecture.lecture_num and lecture_kind='$kind' and lecture_title like '%$title%' order by board_num desc";
-        echo $query;
     }else{
         $query = "select board_num from board, lecture
         where board.lecture_num=lecture.lecture_num and lecture_title like '%$title%' order by board_num desc";
-        echo $query;
     }
 }else{
     if(!empty($kind)){
-        $query = "select lecture_num from board, member, lecture 
+        $query = "select board_num from board, member, lecture 
         where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num and lecture_kind='$kind' and uname like '%$title%' order by board_num desc";
-        echo $query;
     }else{
-        $query = "select lecture_num from board, member
+        $query = "select board_num from board, member
         where board.member_num=member.member_num and uname like '%$title%' order by board_num desc";
-        echo $query;
     }
 }
 $result = mysqli_query($conn, $query);
@@ -118,14 +114,24 @@ if($row == 0){
 							</td>
 						</tr>';
 					}
-					
-					if(isset($kind)){
-						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
-						where board.member_num=member.member_num and lecture.lecture_num = board.lecture_num and lecture.lecture_kind='$kind' order by board_num desc limit $currentLimit, $onePage";
-					}else{
-						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
-						where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
-					}	                   
+					if($select == '강의명'){
+                        if(!empty($kind)){
+                            $query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture  
+                            where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num and lecture_kind='$kind' and lecture_title like '%$title%' order by board_num desc limit $currentLimit, $onePage";
+                        }else{
+                            $query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture
+                            where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num and lecture_title like '%$title%' order by board_num desc limit $currentLimit, $onePage";
+                        }
+                    }else{
+                        if(!empty($kind)){
+                            $query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
+                            where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num and lecture_kind='$kind' and uname like '%$title%' order by board_num desc limit $currentLimit, $onePage";
+                        }else{
+                            $query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture
+                            where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num and uname like '%$title%' order by board_num desc limit $currentLimit, $onePage";
+                        }
+                    }
+					              
                     $result2 = mysqli_query($conn, $query2);
                     while($row2 = mysqli_fetch_array($result2)){
 						$board_num = $row2['board_num'];

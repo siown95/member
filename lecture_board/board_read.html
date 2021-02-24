@@ -161,17 +161,21 @@ $currentLimit = ($onePage * $page) - $onePage;
 		</div>
 
 		<div class="search-info">
-			<div class="search-form f-r">
-				<select class="input-sel" style="width:158px">
+			<form action="board_search.php?page=1" method="POST">
+				<select class="input-sel" style="width:158px" name="kind">
 					<option value="">분류</option>
+					<option value="일반직무">일반직무</option>
+					<option value="산업직무">산업직무</option>
+					<option value="공통역량">공통역량</option>
+					<option value="어학 및 자격증">어학 및 자격증</option>
 				</select>
-				<select class="input-sel" style="width:158px">
-					<option value="">강의명</option>
-					<option value="">작성자</option>
+				<select class="input-sel" style="width:158px" name="select">
+					<option value="강의명">강의명</option>
+					<option value="작성자">작성자</option>
 				</select>
-				<input type="text" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
-				<button type="button" class="btn-s-dark">검색</button>
-			</div>
+				<input type="text" id="title" name="title" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
+				<input type="submit" class="btn-s-dark" value="검색" onclick="return submitChk()">
+			</form>
 		</div>
 
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs">
