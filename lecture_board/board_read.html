@@ -9,12 +9,19 @@ if(isset($_GET['page'])){
 }else{
     $page = 1;
 }
-$board_query = "select board_title, board_content, board_satis, id, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from board, lecture where board.lecture_num=lecture.lecture_num and board_num=$num";
+
+$update_count = "update board set board_count = board_count + 1 where board_num=$num";
+mysqli_query($conn, $update_count);
+
+$board_query = "select board_title, board_content, board_satis, board_date, board_count, id, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from board, member, lecture 
+where board.lecture_num=lecture.lecture_num and board.member_num=member.member_num and board_num=$num";
 $board_result = mysqli_query($conn, $board_query);
 $board_row = mysqli_fetch_array($board_result);
 $board_title = $board_row['board_title'];
 $board_content = $board_row['board_content'];
 $board_satis = $board_row['board_satis'];
+$board_date = $board_row['board_date'];
+$board_count = $board_row['board_count'];
 $board_file = $board_row['board_file'];
 $id = $board_row['id'];
 $lecture_title = $board_row['lecture_title'];
@@ -82,13 +89,14 @@ $currentLimit = ($onePage * $page) - $onePage;
 				<col style="width:20%"/>
 			</colgroup>
 			<tbody>
-				 <tr>
-					<th scope="col"><?php echo $board_title ?></th>
-					<th scope="col" class="user-id">작성자 | <?php echo $id?></th>
-				 </tr>
 				<tr>
-					<td colspan="2">
-						<div class="box-rating">
+					<th scope="col"><?php echo $board_title ?></th>
+					<th scope="col" class="user-id">작성자 | <?php echo $id?> 작성일 | <?php echo $board_date ?></th>
+				</tr>
+				<tr>
+					<td colspan="2">						
+						<div class="box-rating">		
+							<span class="tit_rating">조회수 <?php echo $board_count ?></span><br>					
 							<span class="tit_rating">강의만족도</span>
 							<span class="star-rating">
 								<?php
@@ -105,11 +113,11 @@ $currentLimit = ($onePage * $page) - $onePage;
 								}
 								?>
 							</span>
-						</div>
-						
+						</div>						
 						<?php echo $board_content;?>
 					</td>
 				</tr>
+				
 			</tbody>
 		</table>
 		
@@ -127,7 +135,7 @@ $currentLimit = ($onePage * $page) - $onePage;
 				<tr>
 					<td>
 						<a href="#" class="sample-lecture">
-							<img src=<?php echo $lecture_img ?> alt="" width="144" height="101" />
+							<img src="/files/lecture_img/<?php echo $lecture_img ?>" alt="" width="144" height="101" />
 							<span class="tc-brand">샘플강의 ▶</span>
 						</a>
 					</td>
@@ -195,12 +203,47 @@ $currentLimit = ($onePage * $page) - $onePage;
 								등록된 후기가 없습니다!
 							</td>
 						</tr>';
-					}	
-					if(isset($kind)){
-						$query2 = "select board_num, board_title, board_satis, uname from board, member, lecture where board.id=member.id and lecture.lecture_num = board.lecture_num where lecture.lecture_kind='$kind' order by board_num desc limit $page_start, $list $currentLimit, $onePage";
-					}else{
-						$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.id=member.id and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";
-					}	                    
+					}
+					$best_query = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
+					where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num order by board_count DESC limit 3";
+					$best_result = mysqli_query($conn, $best_query);
+					while($best_row = mysqli_fetch_array($best_result)){
+						$best_num = $best_row['board_num'];
+						$best_title = $best_row['board_title'];
+						$best_satis = $best_row['board_satis'];
+						$best_uname = $best_row['uname'];
+						$best_lecture_title = $best_row['lecture_title'];
+						$best_lecture_kind = $best_row['lecture_kind'];
+
+						echo '
+							<tr class="bbs-sbj">
+								<td><span class="txt-icon-line"><em>BEST</em></span></td>
+								<td>'.$best_lecture_kind.'</td>
+								<td>
+									<a href="board_read.html?page=1&num='.$best_num.'">
+									<span class="tc-gray ellipsis_line">수강 강의명 : '.$best_lecture_title.'</span>
+									<strong class="ellipsis_line">'.$best_title.'</strong>
+									</a>
+								</td>
+								<td>
+									<span class="star-rating">';
+										if($best_satis==5){
+										echo '<span class="star-inner" style="width:100%"></span>';	
+										}else if($best_satis==4){
+										echo '<span class="star-inner" style="width:80%"></span>';
+										}else if($best_satis==3){
+										echo '<span class="star-inner" style="width:60%"></span>';
+										}else if($best_satis==2){
+										echo '<span class="star-inner" style="width:40%"></span>';
+										}else{
+										echo '<span class="star-inner" style="width:20%"></span>';
+										}
+							echo'	</span>
+								</td>
+								<td class="last">'.$best_uname.'</td>
+							</tr>';
+					}
+					$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";                  
                     $result2 = mysqli_query($conn, $query2);
                     while($row2 = mysqli_fetch_array($result2)){
 						$board_num = $row2['board_num'];
@@ -232,7 +275,8 @@ $currentLimit = ($onePage * $page) - $onePage;
 										}else{
 										echo '<span class="star-inner" style="width:20%"></span>';
 										}
-							echo'	</span>
+									echo'	
+									</span>
 								</td>
 								<td class="last">'.$uname.'</td>
 							</tr>';

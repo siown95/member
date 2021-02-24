@@ -9,16 +9,18 @@
 
 <?php
 // 파일 업로드 
+$file = $_FILES['upload_file'];
 $file_name = $_FILES['upload_file']['name'];                // 업로드한 파일명
 $file_tmp_name = $_FILES['upload_file']['tmp_name'];   		// 임시 디렉토리에 저장된 파일명
 $file_size = $_FILES['upload_file']['size'];                 // 업로드한 파일의 크기
 $mimeType = $_FILES['upload_file']['type'];                 // 업로드한 파일의 MIME Type
+$file_type = substr($file['name'], strrpos($file['name'], '.') + 1);
 // 이미지 파일이 저장될 서버 디렉토리 지정
-$save_dir = '../../files/';
+$save_dir = '../../files/board_img/';
 // 업로드 파일 확장자 검사 (필요시 추가)
-   if($mimeType=="html" || $mimeType=="htm" || $mimeType=="php" || $mimeType=="php3" || $mimeType=="inc" || $mimeType=="pl" || $mimeType=="cgi" 
-   || $mimeType=="txt" || $mimeType=="TXT" || $mimeType=="asp" || $mimeType=="jsp" || $mimeType=="phtml" || $mimeType=="js" || $mimeType=="") { 
-		echo '<script> alert("업로드를 할 수 없는 파일형식입니다."); document.location.href = "./file.html"; </script>'; 
+   if($file_type=="html" || $file_type=="htm" || $file_type=="php" || $file_type=="php3" || $file_type=="inc" || $file_type=="pl" || $file_type=="cgi" 
+   || $file_type=="txt" || $file_type=="TXT" || $file_type=="asp" || $file_type=="jsp" || $file_type=="phtml" || $file_type=="js" || $file_type=="") { 
+		echo '<script> alert("업로드를 할 수 없는 파일형식입니다."); document.location.href = "pages/trex/file.html"; </script>'; 
 		exit;
    } 
    

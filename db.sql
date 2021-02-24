@@ -42,3 +42,7 @@ CREATE TABLE board (
   FOREIGN KEY (member_num) REFERENCES member(member_num),
   FOREIGN KEY (lecture_num) REFERENCES lecture(lecture_num)
 ) ENGINE=INNODB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8
+
+
+SELECT board_num, board_title, board_satis, uname, lecture_title, lecture_kind, board_count FROM board, member, lecture 
+					WHERE board.member_num=member.member_num AND board.lecture_num=lecture.lecture_num ORDER BY board_count ASC LIMIT 3;
