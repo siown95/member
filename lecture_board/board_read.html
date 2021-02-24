@@ -15,6 +15,7 @@ $board_row = mysqli_fetch_array($board_result);
 $board_title = $board_row['board_title'];
 $board_content = $board_row['board_content'];
 $board_satis = $board_row['board_satis'];
+$board_file = $board_row['board_file'];
 $id = $board_row['id'];
 $lecture_title = $board_row['lecture_title'];
 $lecture_teacher = $board_row['lecture_teacher'];
@@ -104,9 +105,9 @@ call_body();
 									echo '<span class="star-inner" style="width:100%"></span>';
 								}else if($board_satis == 4){
 									echo '<span class="star-inner" style="width:80%"></span>';
-								}else if($board_satis == 4){
+								}else if($board_satis == 3){
 									echo '<span class="star-inner" style="width:60%"></span>';
-								}else if($board_satis == 4){
+								}else if($board_satis == 2){
 									echo '<span class="star-inner" style="width:40%"></span>';
 								}else{
 									echo '<span class="star-inner" style="width:20%"></span>';

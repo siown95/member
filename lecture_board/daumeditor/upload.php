@@ -10,7 +10,7 @@
 <?php
 // 파일 업로드 
 $file_name = $_FILES['upload_file']['name'];                // 업로드한 파일명
-$file_tmp_name = $_FILES['upload_file']['tmp_name'];   // 임시 디렉토리에 저장된 파일명
+$file_tmp_name = $_FILES['upload_file']['tmp_name'];   		// 임시 디렉토리에 저장된 파일명
 $file_size = $_FILES['upload_file']['size'];                 // 업로드한 파일의 크기
 $mimeType = $_FILES['upload_file']['type'];                 // 업로드한 파일의 MIME Type
 // 이미지 파일이 저장될 서버 디렉토리 지정
@@ -38,10 +38,10 @@ $save_dir = '../../files/';
 	}
 							
 	$file_time = time(); 
-	$file_Name = "file_".$file_time.".".$file_exe;	 // 실제 업로드 될 파일명 생성	(본인이 원하는 스타일로 파일명 지정 가능)	 
-	$change_file_name = $file_Name;					 // 변경된 파일명을 변수에 지정 
-	$real_name = addslashes($real_name);		// 업로드 되는 원래 파일명
-	$real_size = $file_size;                                // 업로드 되는 파일 크기 
+	$file_Name = "file_".$file_time.".".$file_exe;	// 실제 업로드 될 파일명 생성	(본인이 원하는 스타일로 파일명 지정 가능)	 
+	$change_file_name = $file_Name;					// 변경된 파일명을 변수에 지정 
+	$real_name = addslashes($real_name);			// 업로드 되는 원래 파일명
+	$real_size = $file_size;                        // 업로드 되는 파일 크기 
 
  
    //파일을 저장할 디렉토리 및 파일명
@@ -60,7 +60,7 @@ $save_dir = '../../files/';
 	$real_name : 원래 파일명. 예: 풍경사진.gif 
 	$real_size : 파일 크기(byte)
 */
-
+   $download = 'downLoad.php?file='.$change_file_name;
 ?>
 
 
@@ -82,7 +82,7 @@ $save_dir = '../../files/';
 	    }
 		
         var _mockdata = {
-            'attachurl': '<?php echo $dest_url; ?>',
+            'attachurl': '<?php echo $download; ?>',
 			'filemime': '<?php echo $mimeType; ?>',
             'filename': '<?php echo $change_file_name; ?>',
             'filesize': <?php echo $file_size; ?>
