@@ -1,8 +1,8 @@
 <?php
-include "../db.php";
-include "../call_index.php";
 session_start();
-call_doc();
+include "../header.php";
+include "../body.php";
+include "../db.php";
 $num = $_GET['num'];
 if(isset($_GET['page'])){
     $page = $_GET['page'];
@@ -70,18 +70,9 @@ if($page != $allPage){
 }
 $currentLimit = ($onePage * $page) - $onePage;
 ?>
-<head>
-	<?php
-	call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
-?>
 <div id="container" class="container">
 	<?php
-	call_lnb();
+	include "../lnb.php";
 	?>
 
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs-view">
@@ -259,7 +250,7 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
 </div>
 </body>

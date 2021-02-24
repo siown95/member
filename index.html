@@ -1,16 +1,7 @@
 <?php
-include "call_index.php";
 session_start();
-call_doc();
-?>
-<head>
-	<?php
-	call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
+include "header.php";
+include "body.php";
 ?>
 <div id="container">
 	<div class="main-slider-applyclass">
@@ -385,7 +376,7 @@ $(document).ready(function(){
 </script>
 
 <?php
-call_footer();
+include "footer.php";
 ?>
 </div>
 </body>

@@ -1,8 +1,8 @@
 <?php
-include "../call_index.php";
-include "../db.php";
-call_doc();
 session_start();
+include "../header.php";
+include "../body.php";
+include "../db.php";
 if($_SESSION['userid']==''){
 	echo '<script>alert("관리자 로그인이 필요합니다.");location.href="/member/login.html";</script>';
 } else if($_SESSION['userid']!='admin'){
@@ -44,37 +44,37 @@ $prevPage = $page - 1 ;
 $nextPage = $page + 1;
 
 $paging = '';
-if($page != 1){
-	$paging .= '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-}
-if($page != 1){
-	$paging .= '<a href="index.php?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-}
-for($i=$firstPage; $i<=$lastPage; $i++){
-	if($i==$page){
-		$paging .= '<a class="active">'.$i.'</a>';
-	}else{
-		$paging .= '<a href="index.php?page='.$i.'">'.$i.'</a>';
+if($row == 0){
+	$paging = '<a class="active">1</a>';
+}else{
+	if($page != 1){
+		$paging .= '<a href="index.php?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
 	}
+	if($page != 1){
+		$paging .= '<a href="index.php?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+	}
+	for($i=$firstPage; $i<=$lastPage; $i++){
+		if($i==$page){
+			$paging .= '<a class="active">'.$i.'</a>';
+		}else{
+			$paging .= '<a href="index.php?page='.$i.'">'.$i.'</a>';
+		}
+	}
+	if($page != $lastPage){
+		$paging .= '<a href="index.php?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+	}
+	if($page != $allPage){
+		$paging .= '<a href="index.php?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+	}
+	$currentLimit = ($onePage * $page) - $onePage;
 }
-if($page != $lastPage){
-	$paging .= '<a href="index.php?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-}
-if($page != $allPage){
-	$paging .= '<a href="index.php?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-}
-$currentLimit = ($onePage * $page) - $onePage;
+
 ?>
-<head>
-	<?php
-		call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
-?>
+
 <div id="container" class="container">
+<div class="tit-box-h3">
+	<h3 class="tit-h3">강의 등록</h3>
+</div>
 <ul class="tab-list tab5">
 			<?php
 			if($kind=='일반직무'){
@@ -115,21 +115,23 @@ call_body();
 			}
 			?>
 		</ul>
+		
 		<div class="search-info">
 			<div class="search-form f-r">
-				<select class="input-sel" style="width:158px">
-					<option value="">분류</option>
-					<option value="일반직무">일반직무</option>
-					<option value="산업직무">산업직무</option>
-					<option value="공통역량">공통역량</option>
-					<option value="어학 및 자격증">어학 및 자격증</option>
-				</select>
-				<select class="input-sel" style="width:158px">
-					<option value="강의명">강의명</option>
-					<option value="강사이름">강사이름</option>
-				</select>
-				<input type="text" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
-				<button type="button" class="btn-s-dark">검색</button>
+				<form action="search_index.php?page=1" method="POST">
+					<select class="input-sel" style="width:158px" name="kind">
+						<option value="">분류</option>
+						<option value="일반직무">일반직무</option>
+						<option value="산업직무">산업직무</option>
+						<option value="공통역량">공통역량</option>
+						<option value="어학 및 자격증">어학 및 자격증</option>
+					</select>
+					<select class="input-sel" style="width:158px">
+						<option value="">강의명</option>
+					</select>
+					<input type="text" id="title" name="title" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
+					<input type="submit" class="btn-s-dark" onclick="return submitChk();" value="검색">
+				</form>
 			</div>
 		</div>
 
@@ -169,8 +171,7 @@ call_body();
 						$query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $currentLimit, $onePage";
 					}
                     $result2 = mysqli_query($conn, $query2);
-					$count = mysqli_num_rows($result2);
-					$i = $count;
+					
                     while($row = mysqli_fetch_array($result2)){
 						$lecture_num = $row['lecture_num'];
 						$lecture_kind = $row['lecture_kind'];
@@ -179,7 +180,7 @@ call_body();
 						$lecture_time = $row['lecture_time'];
 						echo '
 							<tr class="bbs-sbj">
-								<td>'.$i--.'</td>
+								<td>'.$lecture_num.'</td>
 								<td>'.$lecture_kind.'</td>
 								<td>
 									<a href="lecture_read.html?page=1&num='.$lecture_num.'">
@@ -210,8 +211,23 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
+<script>
+	function submitChk(){
+		var title = document.getElementById("title").value;
+		if(title == ''){
+			alert("강의명을 입력하세요!");
+			return false;
+		}else if(title.length<2){
+			alert("2글자 이상 입력하세요!");
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+</script>
 </div>
 </body>
 </html>

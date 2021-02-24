@@ -9,7 +9,7 @@ $content = $_POST['content'];
 $attach_file = $_POST['attach_file'];
 $explode = explode('=', $attach_file);
 $file = $explode[1];
-
+$date = date('Y-m-d H:i:s');
 if(isset($attach_file)){
     $query = "insert into board (board_title, board_content, board_satis, board_file, id, lecture_num) values ('$title', '$content', '$satis', '$file', '$id', $lecture_num)";
 }else{

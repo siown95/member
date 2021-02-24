@@ -1,6 +1,7 @@
 <?php
 session_start();
-include "../call_index.php";
+include "../header.php";
+include "../body.php";
 include "../db.php";
 $num = $_GET['num'];
 if(isset($_GET['page'])){
@@ -63,16 +64,6 @@ if($page != $allPage){
 	$paging .= '<a href="lecture_read.html?page='.$allPage.'&num='.$num.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
 }
 $currentLimit = ($onePage * $page) - $onePage;
-call_doc();
-?>
-<head>
-	<?php
-		call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
 ?>
 <div id="container" class="container">
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-lecture-list">
@@ -86,7 +77,7 @@ call_body();
 				<tr>
 					<td>
 						<a href="#" class="sample-lecture">
-							<img src=<?php echo $lecture_img?> alt="" width="144" height="101" />
+							<img src="/files/lecture_img/<?php echo $lecture_img?>" alt="" width="144" height="101" />
 							<span class="tc-brand">샘플강의 ▶</span>
 						</a>
 					</td>
@@ -106,15 +97,20 @@ call_body();
 
 		<div class="search-info">
 			<div class="search-form f-r">
-				<select class="input-sel" style="width:158px">
-					<option value="">분류</option>
-				</select>
-				<select class="input-sel" style="width:158px">
-					<option value="">강의명</option>
-					<option value="">작성자</option>
-				</select>
-				<input type="text" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
-				<button type="button" class="btn-s-dark">검색</button>
+				<form action="search_index.php?page=1" method="POST">
+					<select class="input-sel" style="width:158px" name="kind">
+						<option value="">분류</option>
+						<option value="일반직무">일반직무</option>
+						<option value="산업직무">산업직무</option>
+						<option value="공통역량">공통역량</option>
+						<option value="어학 및 자격증">어학 및 자격증</option>
+					</select>
+					<select class="input-sel" style="width:158px">
+						<option value="">강의명</option>
+					</select>
+					<input type="text" id="title" name="title" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
+					<input type="submit" class="btn-s-dark" onclick="return submitChk();" value="검색">
+				</form>
 			</div>
 		</div>
 
@@ -142,6 +138,7 @@ call_body();
 				<?php
                     $query2 = "select lecture_num, lecture_kind, lecture_title, lecture_teacher, lecture_time from lecture order by lecture_num desc limit $currentLimit, $onePage";
                     $result2 = mysqli_query($conn, $query2);
+					
                     while($row = mysqli_fetch_array($result2)){
 						if($row == 0){
 							echo '
@@ -184,7 +181,7 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
 </div>
 </body>

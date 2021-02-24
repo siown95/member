@@ -1,16 +1,7 @@
 <?php
-include "../call_index.php";
-call_doc();
 session_start();
-?>
-<head>
-	<?php
-		call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
+include "../header.php";
+include "../body.php";
 ?>
 <div id="container" class="container">
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">
@@ -63,7 +54,7 @@ call_body();
 				<tr>
 					<th scope="col">강의이미지</th>
 					<td>
-						<input type="file" id="lecture_img" name="lecture_img" accept="image/gif, image/jpeg, image/png, image/jpg" required>
+						<input type="file" id="lecture_img" name="lecture_img" required>
 					</td>
 				</tr>
 			</tbody>
@@ -75,7 +66,7 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
 </div>
 <script>
@@ -94,8 +85,6 @@ function submitChk(){
 		return true;
 	}
 }
-
-
 </script>
 </body>
 </html>

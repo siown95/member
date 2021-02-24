@@ -1,8 +1,8 @@
 <?php
-include "../call_index.php";
-include "../db.php";
-call_doc();
 session_start();
+include "../header.php";
+include "../body.php";
+include "../db.php";
 $num = $_GET['num'];
 $query = "select lecture_num, lecture_title from lecture";
 $result = mysqli_query($conn, $query);
@@ -18,19 +18,9 @@ $board_content = $board_row['board_content'];
 $blecture_title = $board_row['lecture_title'];
 $blecture_kind = $board_row['lecture_kind'];
 ?>
-<head>
-	<?php
-		call_header();
-        call_daumEditor();
-	?>
-</head>
-<body>
-<?php
-call_body();
-?>
 <div id="container" class="container">
 	<?php
-	call_lnb();
+	include "../lnb.php";
 	?>
 		<div class="user-notice">
 			<strong class="fs16">유의사항 안내</strong>
@@ -742,7 +732,7 @@ call_body();
 </div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
 </body>
 </html>

@@ -60,9 +60,8 @@ $save_dir = '../../files/';
 	$real_name : 원래 파일명. 예: 풍경사진.gif 
 	$real_size : 파일 크기(byte)
 */
-   $download = 'downLoad.php?file='.$change_file_name;
+   $download = '/lecture/downLoad.php?file='.$change_file_name;
 ?>
-
 
 <script type="text/javascript">
 // <![CDATA[

@@ -1,24 +1,29 @@
 <?php
-include "../call_index.php";
-include "../db.php";
-call_doc();
 session_start();
+include "../header.php";
+include "../body.php";
+include "../db.php";
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 $id = $_SESSION['userid'];
-$query = "select uname, phone from member where id='$id'";
+$query = "select uname, email1, email2, phone1, phone2, phone3, home1, home2, home3, zip, address1, address2 from member where id='$id'";
 $result = mysqli_query($conn, $query);
 $row = mysqli_fetch_array($result);
 $name = $row['uname'];
-$phone = $row['phone'];
+$email1 = $row['email1'];
+$email2 = $row['email2'];
+$phone1 = $row['phone1'];
+$phone2 = $row['phone2'];
+$phone3 = $row['phone3'];
+$phone = $phone1.'-'.$phone2.'-'.$phone3;
+$home1 = $row['home1'];
+$home3 = $row['home2'];
+$home2 = $row['home3'];
+$zip = $row['zip'];
+$address1 = $row['address1'];
+$address2 = $row['address2'];
 mysqli_close($conn);
-?>
-<head>
-	<?php
-	call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -42,15 +47,12 @@ call_body();
 					<form name="myform" action="modify.php" method="POST">
 					<tbody>
 						<tr>
-							<th scope="col"><span class="icons">*</span>이름</th>
+							<th scope="col"><span class="icons"></span>이름</th>
 							<td><?php echo $name;?></td>
 						</tr>
 						<tr>
-							<th scope="col"><span class="icons">*</span>아이디</th>
-							<td>
-								<input type="text" class="input-text" id="id" name="id" style="width:302px" placeholder="영문자로 시작하는 4~15자의 영문소문자, 숫자" minlength="4" maxlength="15" required/>
-								<a href="#" class="btn-s-tin ml10" onclick="idChk();">중복확인</a>
-							</td>
+							<th scope="col"><span class="icons"></span>아이디</th>
+							<td><?php echo $id;?></td>
 						</tr>
 						<tr>
 							<th scope="col"><span class="icons">*</span>비밀번호</th>
@@ -61,9 +63,9 @@ call_body();
 							<td><input type="password" class="input-text" id="passChk" name="passChk" style="width:302px" minlength="8" maxlength="15" required/></td>
 						</tr>
 						<tr>
-							<th scope="col"><span class="icons">*</span>이메일주소</th>
+							<th scope="col"><span class="icons"></span>이메일주소</th>
 							<td>
-								<input type="text" class="input-text" name="email1" style="width:138px" required/> @ <input type="text" class="input-text" name="email2" style="width:138px" required/>
+								<input type="text" class="input-text" name="email1" style="width:138px" value=<?php echo $email1; ?>> @ <input type="text" class="input-text" name="email2" style="width:138px" value=<?php echo $email2 ?>>
 								<select class="input-sel" style="width:160px" onchange="changeSelect(this);">
 									<option value="user">직접입력</option>
 									<option value="test1.co.kr">test1.co.kr</option>
@@ -74,28 +76,28 @@ call_body();
 							</td>
 						</tr>
 						<tr>
-							<th scope="col"><span class="icons">*</span>휴대폰 번호</th>
+							<th scope="col"><span class="icons"></span>휴대폰 번호</th>
 							<td><?php echo $phone;?></td>
 						</tr>
 						<tr>
 							<th scope="col"><span class="icons"></span>일반전화 번호</th>
 							<td>
-								<input type="text" class="input-text" name="home1" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="2" maxlength="3" style="width:88px"/>
-								- <input type="text" class="input-text" name="home2" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="3" maxlength="4"  style="width:88px"/>
-								- <input type="text" class="input-text" name="home3" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4"  style="width:88px"/>
+								<input type="text" class="input-text" name="home1" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="2" maxlength="3" style="width:88px" value=<?php echo $home1 ?>>
+								- <input type="text" class="input-text" name="home2" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="3" maxlength="4"  style="width:88px" value=<?php echo $home2 ?>>
+								- <input type="text" class="input-text" name="home3" return checkNumber(event)" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4"  style="width:88px" value=<?php echo $home3 ?>>
 							</td>
 						</tr>
 						<tr>
-							<th scope="col"><span class="icons">*</span>주소</th>
+							<th scope="col"><span class="icons"></span>주소</th>
 							<td>
 								<p >
-									<label>우편번호 <input type="text" id="zip" name="zip" class="input-text ml5" style="width:242px" readonly /></label><a href="#" class="btn-s-tin ml10"  onclick="daum_api();">주소찾기</a>
+									<label>우편번호 <input type="text" id="zip" name="zip" class="input-text ml5" style="width:242px" value=<?php echo $zip ?> readonly /></label><a href="#" class="btn-s-tin ml10"  onclick="daum_api();">주소찾기</a>
 								</p>
 								<p class="mt10">
-									<label>기본주소 <input type="text" id="address1" name="address1" class="input-text ml5" style="width:719px" required/></label>
+									<label>기본주소 <input type="text" id="address1" name="address1" class="input-text ml5" style="width:719px" value="<?php echo $address1 ?>"></label>
 								</p>
 								<p class="mt10">
-									<label>상세주소 <input type="text" id="address2" name="address2" class="input-text ml5" style="width:719px" required/></label>
+									<label>상세주소 <input type="text" id="address2" name="address2" class="input-text ml5" style="width:719px" value="<?php echo $address2 ?>"></label>
 								</p>
 							</td>
 						</tr>
@@ -144,38 +146,11 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php"
 ?>
 </div>
+</body>
 <script>
-	function idChk(){
-		var id = document.getElementById("id").value;
-		if(id){
-			url = "idChk.php?id="+id;
-			window.open(url,"chkid", "width=500,height=150");
-		}else{
-			alert("아이디를 입력하세요!");
-		}
-	}
-	//아이디 중복체크
-	function sendData(){
-        document.getElementById("id").readOnly=true;
-    }
-	//아이디 중복체크 후 readOnly로 변환
-	$("#name").keyup(function(e) { 
-	if (!(e.keyCode >=37 && e.keyCode<=40)) {
-		var v = $(this).val();
-		$(this).val(v.replace(/[^ㄱ-힣]/gi,''));
-	}
-	});
-	//이름 한글만 입력
-	$("#id").keyup(function(e) { 
-	if (!(e.keyCode >=37 && e.keyCode<=40)) {
-		var v = $(this).val();
-		$(this).val(v.replace(/[^a-z0-9]/gi,''));
-	}
-	});
-	//id 영문, 숫자만 입력
 	function checkNumber(event) {
 		if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
     		return true;
@@ -200,16 +175,13 @@ call_footer();
 	}
 	//이메일 셀렉트
 	function submitChk(){
-		var idChk = document.getElementById("id").readOnly;
 		var pw = document.getElementById("password").value;
 		var pwChk = document.getElementById("passChk").value;
-		if(idChk == false){
-			alert("아이디 중복체크를 해주세요!");
+		if(!pw||!pwChk){
+			alert("비밀번호를 입력해주세요");
 			return false;
-		}else if(pw!=pwChk){
-			alert("비밀번호가 일치하지 않습니다!");
-			return false;
-		}else if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
+		}
+		if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
 			alert("비밀번호는 영어와 숫자를 포함해야합니다!");
 			return false;
 		}else{
@@ -257,5 +229,4 @@ function daum_api() {
         }).open();
     }
 </script>
-</body>
 </html>

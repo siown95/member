@@ -1,15 +1,10 @@
 <?php
-include "../call_index.php";
-call_doc();
-?>
-<head>
-	<?php
-	call_header();
-	?>
-</head>
-<body>
-<?php 
-call_body();
+session_start();
+include "../header.php";
+include "../body.php";
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -135,7 +130,7 @@ call_body();
 </div>
 
 <?php
-call_footer();
+include "../footer.php";
 ?>
 </div>
 <script>

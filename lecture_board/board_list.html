@@ -1,8 +1,8 @@
 <?php
-include "../call_index.php";
-include "../db.php";
-call_doc();
 session_start();
+include "../header.php";
+include "../body.php";
+include "../db.php";
 $kind = $_GET['kind'];
 if(isset($_GET['page'])){
     $page = $_GET['page'];
@@ -66,18 +66,9 @@ if($row == 0){
 }
 
 ?>
-<head>
-<?php
-call_header();
-?>
-</head>
-<body>
-<?php
-call_body();
-?>
 <div id="container" class="container">
 	<?php
-	call_lnb();
+	include "../lnb.php";
 	?>
 
 		<ul class="tab-list tab5">
@@ -125,6 +116,10 @@ call_body();
 			<div class="search-form f-r">
 				<select class="input-sel" style="width:158px">
 					<option value="">분류</option>
+					<option value="">일반직무</option>
+					<option value="">산업직무</option>
+					<option value="">공통역량</option>
+					<option value="">어학 및 자격증</option>
 				</select>
 				<select class="input-sel" style="width:158px">
 					<option value="">강의명</option>
@@ -231,7 +226,7 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "footer.php";
 ?>
 </div>
 </body>

@@ -1,8 +1,11 @@
 <?php
-include "../call_index.php";
-include "../db.php";
-call_doc();
 session_start();
+include "../header.php";
+include "../body.php";
+include "../db.php";
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 $_SESSION['pin'] = '123456';
 $radio = $_POST['radio'];
 $pin = $_POST['pin'];
@@ -14,8 +17,7 @@ if($pin != $_SESSION['pin']){
         $phone1 = $_POST['phone1'];
         $phone2 = $_POST['phone2'];
         $phone3 = $_POST['phone3'];
-        $phone = $phone1.'-'.$phone2.'-'.$phone3;
-        $query = "select id from member where uname='$name' and phone='$phone'";
+        $query = "select id from member where uname='$name' and phone1='$phone1' and phone2='$phone2' and phone3='$phone3'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
         if($row==0){
@@ -26,8 +28,7 @@ if($pin != $_SESSION['pin']){
     }else{
         $email1 = $_POST['email1'];
         $email2 = $_POST['email2'];
-        $email = $email1.'@'.$email2;
-        $query = "select id from member where uname='$name' and email='$email'";
+        $query = "select id from member where uname='$name' and email1='$email1' and email2='$email2'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
         if($row==0){
@@ -38,15 +39,6 @@ if($pin != $_SESSION['pin']){
     }
 }
 mysqli_close($conn);
-?>
-<head>
-	<?php
-	call_header();
-	?>
-</head>
-<body>
-<?php
-call_body();
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -97,7 +89,7 @@ call_body();
 	</div>
 </div>
 <?php
-call_footer();
+include "../footer.php";
 ?>
 <script>
 	function submitChk(){
