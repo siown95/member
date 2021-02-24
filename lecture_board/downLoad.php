@@ -1,5 +1,5 @@
 <?php
-$dir = '../files/';
+$dir = '../files/board_img/';
 $file = $_GET['file'];
 $down = $dir.$file;
 $filesize = filesize($down);
