@@ -211,7 +211,8 @@ $currentLimit = ($onePage * $page) - $onePage;
 						$best_lecture_title = $best_row['lecture_title'];
 						$best_lecture_kind = $best_row['lecture_kind'];
 
-						echo '
+						if($page==1){
+							echo '
 							<tr class="bbs-sbj">
 								<td><span class="txt-icon-line"><em>BEST</em></span></td>
 								<td>'.$best_lecture_kind.'</td>
@@ -238,6 +239,8 @@ $currentLimit = ($onePage * $page) - $onePage;
 								</td>
 								<td class="last">'.$best_uname.'</td>
 							</tr>';
+						}
+						
 					}
 					if($row == 0){
 					echo '
