@@ -27,7 +27,6 @@ $email_result = mysqli_query($conn, $email_query);
 $row = mysqli_fetch_array($email_result);
 
 
-
 if($email1==$row['email1'] && $email2==$row['email2']){
     echo json_encode(array('res'=>'emailDuplicate'));
 }
