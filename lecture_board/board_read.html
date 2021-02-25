@@ -200,14 +200,6 @@ $currentLimit = ($onePage * $page) - $onePage;
 	 
 			<tbody>
 				<?php
-					if($row == 0){
-					echo '
-						<tr class="bbs-sbj">
-							<td colspan="5" class="last">
-								등록된 후기가 없습니다!
-							</td>
-						</tr>';
-					}
 					$best_query = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture 
 					where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num order by board_count DESC limit 3";
 					$best_result = mysqli_query($conn, $best_query);
@@ -247,6 +239,15 @@ $currentLimit = ($onePage * $page) - $onePage;
 								<td class="last">'.$best_uname.'</td>
 							</tr>';
 					}
+					if($row == 0){
+					echo '
+						<tr class="bbs-sbj">
+							<td colspan="5" class="last">
+								등록된 후기가 없습니다!
+							</td>
+						</tr>';
+					}
+					
 					$query2 = "select board_num, board_title, board_satis, uname, lecture_title, lecture_kind from board, member, lecture where board.member_num=member.member_num and board.lecture_num=lecture.lecture_num order by board_num desc limit $currentLimit, $onePage";                  
                     $result2 = mysqli_query($conn, $query2);
                     while($row2 = mysqli_fetch_array($result2)){
@@ -305,7 +306,7 @@ include "../footer.php";
 	function submitChk(){
 		var title = document.getElementById("title").value;
 		if(title == ''){
-			alert("강의명을 입력하세요!");
+			alert("검색어를 입력하세요!");
 			return false;
 		}else if(title.length<2){
 			alert("2글자 이상 입력하세요!");

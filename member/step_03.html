@@ -113,7 +113,7 @@
 									<a href="#" class="btn-s-tin ml10" onclick="daum_api();">주소찾기</a>
 								</p>
 								<p class="mt10">
-									<label>기본주소 <input type="text" class="input-text ml5" id="address1" name="address1" style="width:719px" required/></label>
+									<label>기본주소 <input type="text" class="input-text ml5" id="address1" name="address1" style="width:719px" required readonly/></label>
 								</p>
 								<p class="mt10">
 									<label>상세주소 <input type="text" class="input-text ml5" id="address2" name="address2" style="width:719px"/></label>
@@ -230,6 +230,8 @@ include "../footer.php";
 		var home1 = document.getElementById("home1").value;
 		var home2 = document.getElementById("home2").value;
 		var home3 = document.getElementById("home3").value;
+		var zip = document.getElementById("zip").value;
+		var address1 = document.getElementById("address1").value;
 		if(home1 != '' || home2 != '' || home3 != ''){
 			document.getElementById("home1").required=true;
 			document.getElementById("home2").required=true;
@@ -247,6 +249,9 @@ include "../footer.php";
 			return false;
 		}else if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
 			alert("비밀번호는 영어와 숫자를 포함해야합니다!");
+			return false;
+		}else if(!zip || !address1){
+			alert("주소를 입력하세요!");
 			return false;
 		}else{
 			return true;

@@ -84,7 +84,24 @@ if($row == 0){
 				<col style="width:15%"/>
 				<col style="width:12%"/>
 			</colgroup>
-
+			<div class="search-info">
+			<div class="search-form f-r">
+				<form action="search_index.php?page=1" method="POST">
+					<select class="input-sel" style="width:158px" name="kind">
+						<option value="">분류</option>
+						<option value="일반직무">일반직무</option>
+						<option value="산업직무">산업직무</option>
+						<option value="공통역량">공통역량</option>
+						<option value="어학 및 자격증">어학 및 자격증</option>
+					</select>
+					<select class="input-sel" style="width:158px">
+						<option value="">강의명</option>
+					</select>
+					<input type="text" id="title" name="title" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
+					<input type="submit" class="btn-s-dark" onclick="return submitChk();" value="검색">
+				</form>
+			</div>
+		</div>
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -155,5 +172,20 @@ if($row == 0){
 include "../footer.php";
 ?>
 </div>
+<script>
+	function submitChk(){
+		var title = document.getElementById("title").value;
+		if(title == ''){
+			alert("강의명을 입력하세요!");
+			return false;
+		}else if(title.length<2){
+			alert("2글자 이상 입력하세요!");
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+</script>
 </body>
 </html>
