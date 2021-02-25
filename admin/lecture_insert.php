@@ -47,8 +47,8 @@ $query = "insert into lecture (lecture_kind, lecture_title, lecture_teacher, lec
         values('$lecure_kind','$lecture_title','$lecture_teacher','$lecture_diffi','$lecture_time','$change_file_name')";
 $result = mysqli_query($conn, $query);
 if($result){
-        echo '<script>alert("강의가 등록되었습니다.");location.href="../index.php?mode=admin";</script>';
-        }else{  
-                echo $query;
-        }
+    echo '<script>alert("강의가 등록되었습니다.");location.href="../index.php?mode=admin";</script>';
+    }else{  
+        echo $query;
+    }
 ?>
