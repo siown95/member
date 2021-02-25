@@ -16,7 +16,7 @@ else if($mode=='complete'){
     header("Location: /member/find_id.html");
 }
 else if($mode =='find_pass'){
-    header("Location: /member/find_complete.html");
+    header("Location: /member/find_pass.html");
 }
 else if($mode =='modify'){
     header("Location: /member/modify.html");
