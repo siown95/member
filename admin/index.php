@@ -186,7 +186,7 @@ if($row == 0){
 								<td>'.$lecture_num.'</td>
 								<td>'.$lecture_kind.'</td>
 								<td>
-									<a href="lecture_read.html?page=1&num='.$lecture_num.'">
+									<a href="lecture_read.html?page='.$page.'&num='.$lecture_num.'">
 									<span class="tc-gray ellipsis_line">'.$lecture_title.'</span>
 									</a>
 								</td>
