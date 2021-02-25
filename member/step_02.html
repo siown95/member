@@ -36,21 +36,19 @@ $_SESSION['pin'] = '123456';
 			<div class="section-content after">
 				<div class="identify-box" style="width:100%;height:190px;">
 					<div class="identify-inner">
-						<form action="step_03.html" method="POST">
 						<strong>휴대폰 인증</strong>
 						<p>주민번호 없이 메시지 수신가능한 휴대폰으로 1개 아이디만 회원가입이 가능합니다. </p>
 
 						<br />
+						<input type="hidden" class="input-text" style="width:50px" id="phone" name="phone" />
 						<input type="text" class="input-text" style="width:50px" id="phone1" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="3" maxlength="3" required/> - 
 						<input type="text" class="input-text" style="width:50px" id="phone2" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4" required/> - 
 						<input type="text" class="input-text" style="width:50px" id="phone3" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4" required/>
-						<a href="#" class="btn-s-line" onclick="chkPhone();">인증번호 받기</a>
+						<a href="#" class="btn-s-line" onclick="get_verification_number();" name="get_verification_number" id="get_verification_number">인증번호 받기</a>
 
 						<br /><br />
 						<input type="text" id="pin" name="pin" class="input-text" style="width:200px" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="6" maxlength="6" required/>
-						<!-- <a href="#" class="btn-s-line">인증번호 확인</a> -->
-						<input type="submit" id="sub" class="btn-s-line" onclick="return submitChk();" value="인증번호 확인">
-					</form>
+						<a href="#" class="btn-s-line" onclick="confirm_verification_number();">인증번호 확인</a>
 					</div>
 					<i class="graphic-phon"><span>휴대폰 인증</span></i>
 				</div>
@@ -64,36 +62,50 @@ include "../footer.php";
 ?>
 </div>
 <script>	
-	function chkPhone(){
-		var phone1 = document.getElementById("phone1").value;
-		var phone2 = document.getElementById("phone2").value;
-		var phone3 = document.getElementById("phone3").value;
-		if(phone1.length<3 || phone2.length<4 || phone3.length<4){
-			alert("번호를 확인해 주세요");
-		}else{
-			alert("인증번호가 발송되었습니다!");
-			document.getElementById("phone1").readOnly = true;
-			document.getElementById("phone2").readOnly = true;
-			document.getElementById("phone3").readOnly = true;
-		}
-	}
+	function get_verification_number() {
+        const f_mobile_0 = document.getElementById('f_mobile_0').value;
+        const f_mobile_1 = document.getElementById('f_mobile_1').value;
+        const f_mobile_2 = document.getElementById('f_mobile_2').value;
+
+        if (!f_mobile_0 || !f_mobile_1 || !f_mobile_2) {
+            alert("휴대폰 번호를 입력해주세요");
+            return false;
+        }
+
+        document.getElementById("f_mobile").value = f_mobile_0 + f_mobile_1 + f_mobile_2;
+        document.getElementById("verification_number").value = 123456;
+
+        alert("인증번호가 전송되었습니다.");
+    }
+
 	function checkNumber(event) {
 		if(event.key === '.' || event.key === '-' || event.key >= 0 && event.key <= 9) {
     		return true;
   		}
   		return false;
 	}
-	function submitChk(){
-		var t1 = document.getElementById("phone1").readOnly;
-		var t2 = document.getElementById("phone2").readOnly;
-		var t3 = document.getElementById("phone3").readOnly;
-		if(t1==false||t2==false||t3==false){
-			alert("인증번호를 받아주세요!");
-			return false;
-		}else{
-			return true;
-		}
-	}
+
+	function confirm_verification_number() {
+        const verification_number = document.getElementById("pin").value
+        const f_mobile = document.getElementById("f_mobile").value
+        $.ajax({
+            url: "/member/chkPin.php",
+            dataType: "json",
+            data: {"pin": verification_number, "f_mobile": f_mobile},
+            type: "POST",
+            success:function(data){
+                if (data.res == "success") {
+                    alert("인증번호가 확인되었습니다.");
+                    window.location.href='/index.php?mode=step_03';
+                }else{
+					alert("인증번호에 실패하였습니다.");
+				}
+            },
+            error:function () {
+
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -3,12 +3,7 @@
 	include "../header.php";
 	include "../db.php";
 	include "../body.php";
-	if(isset($_SESSION['userid'])){
-		echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
-	}
-	if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
-		echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
-	}
+	$pin = $_POST["pin"];
 	$phone1 = $_POST["phone1"];
 	$phone2 = $_POST["phone2"];
 	$phone3 = $_POST["phone3"];
@@ -19,6 +14,12 @@
 	
 	if($row!=0){
 		echo '<script>alert("등록된 사용자입니다."); location.href="/member/login.html";</script>';
+	}else{
+		if($_SESSION["pin"] == $pin){
+			echo '<script>alert("인증에 성공하였습니다."); </script>';
+		}else{
+			echo '<script>alert("인증에 실패하였습니다."); history.back();</script>';
+		}
 	}
 	mysqli_close($conn);
 ?>
@@ -50,7 +51,7 @@
 					</colgroup>
 
 
-					<form name="myform" action="regist.php" method="POST">
+					<form name="myform" action="regist.php" method="POST" onsubmit="return checkSunb();">
 					<tbody>
 						<tr>
 							<th scope="col"><span class="icons">*</span>이름</th>
@@ -164,8 +165,6 @@ include "../footer.php";
 </body>
 <script>	
 	function idChk(){
-		//alert(111);
-		/*
 		var id = document.getElementById("id").value;
 		if(id.length < 4 && id.length > 1){
 			alert("아이디는 4자리 이상 입력해주세요!");
@@ -175,30 +174,6 @@ include "../footer.php";
 			url = "idChk.php?id="+id;
 			window.open(url,"chkid", "width=500,height=150");
 		}
-		*/
-		const id = document.getElementById("id").value
-        // const f_mobile = document.getElementById("f_mobile").value
-        $.ajax({
-            url: "/member/idChk.php",
-            dataType: "json",
-            data: {"id": id},
-            type: "POST",
-            success:function(data){
-                if (data.res == "success") {
-                    alert("성공.");
-                    // window.location.href='/index.php?mode=step_03';
-                }
-
-				if (data.res == "fail") {
-                    alert("중목된아이디.");
-                    // window.location.href='/index.php?mode=step_03';
-                }
-
-            },
-            error:function () {
-
-            }
-        });
 	}
 	//아이디 중복체크
 	function sendData(){
