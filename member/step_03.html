@@ -9,18 +9,9 @@
 	if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
 		echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
 	}
-	$phone1 = $_POST["phone1"];
-	$phone2 = $_POST["phone2"];
-	$phone3 = $_POST["phone3"];
-	
-	$query = "select phone1, phone2, phone3 from member where phone1='$phone1' and phone2='$phone2' and phone3='$phone3'";
-	$result = mysqli_query($conn, $query);
-	$row = mysqli_fetch_array($result);
-	
-	if($row!=0){
-		echo '<script>alert("등록된 사용자입니다."); location.href="/member/login.html";</script>';
-	}
-	mysqli_close($conn);
+	$phone1 = $_SESSION["phone1"];
+	$phone2 = $_SESSION["phone2"];
+	$phone3 = $_SESSION["phone3"];
 ?>
 <div id="container" class="container-full">
 	<div id="content" class="content">
@@ -48,9 +39,6 @@
 						<col style="width:15%"/>
 						<col style="*"/>
 					</colgroup>
-
-
-					<form name="myform" action="regist.php" method="POST">
 					<tbody>
 						<tr>
 							<th scope="col"><span class="icons">*</span>이름</th>
@@ -70,10 +58,12 @@
 							<th scope="col"><span class="icons">*</span>비밀번호 확인</th>
 							<td><input type="password" class="input-text" id="passChk" name="passChk" style="width:302px" minlength="8" maxlength="15" required/></td>
 						</tr>
+						<input type="hidden" id="pw" value="false">
 						<tr>
 							<th scope="col"><span class="icons">*</span>이메일주소</th>
 							<td>
-								<input type="text" class="input-text" name="email1" style="width:138px" required/> @ <input type="text" class="input-text" name="email2" style="width:138px" required/>
+								<input type="text" class="input-text" id="email1" name="email1" style="width:138px" required/> @ 
+								<input type="text" class="input-text" id="email2" name="email2" style="width:138px" required/>
 								<select name="sel" class="input-sel" style="width:160px" onchange="changeSelect(this);">
 									<option value="user">직접입력</option>
 									<option value="test1.co.kr">test1.co.kr</option>
@@ -86,9 +76,9 @@
 						<tr>
 							<th scope="col"><span class="icons">*</span>휴대폰 번호</th>
 							<td>
-								<input type="text" class="input-text" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone1?> readonly/> - 
-								<input type="text" class="input-text" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone2?> readonly/> - 
-								<input type="text" class="input-text" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone3?> readonly/>
+								<input type="text" class="input-text" id="phone1" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone1?> readonly/> - 
+								<input type="text" class="input-text" id="phone2" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone2?> readonly/> - 
+								<input type="text" class="input-text" id="phone3" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="width:50px" value=<?php echo $phone3?> readonly/>
 							</td>
 						</tr>
 						<tr>
@@ -149,8 +139,7 @@
 				</table>
 
 				<div class="box-btn">
-					<!-- <a href="#" class="btn-l">회원가입</a> -->
-					<input type="submit" class="btn-l" onclick="return submitChk();" value="회원가입"> 
+					<a href="#" class="btn-l" onclick="return submitChk();">회원가입</a>
 				</div>
 			</form>
 			</div>
@@ -163,48 +152,35 @@ include "../footer.php";
 </div>
 </body>
 <script>	
-	function idChk(){
-		//alert(111);
-		/*
-		var id = document.getElementById("id").value;
-		if(id.length < 4 && id.length > 1){
+	function idChk(){		
+		const id = document.getElementById("id").value;
+		if(id.length < 4){
 			alert("아이디는 4자리 이상 입력해주세요!");
 		}else if(!id){
 			alert("아이디를 입력하세요!");
 		}else{
-			url = "idChk.php?id="+id;
-			window.open(url,"chkid", "width=500,height=150");
-		}
-		*/
-		const id = document.getElementById("id").value
-        // const f_mobile = document.getElementById("f_mobile").value
-        $.ajax({
+			$.ajax({
             url: "/member/idChk.php",
             dataType: "json",
             data: {"id": id},
             type: "POST",
             success:function(data){
                 if (data.res == "success") {
-                    alert("성공.");
-                    // window.location.href='/index.php?mode=step_03';
-                }
-
-				if (data.res == "fail") {
-                    alert("중목된아이디.");
-                    // window.location.href='/index.php?mode=step_03';
-                }
-
+                    alert("사용할 수 있는 아이디입니다.");
+					document.getElementById("id").readOnly=true;
+                }else if(data.res=="match_fail"){
+					alert("아이디는 영어 소문자로 시작해야 합니다.");
+				}else{
+					alert("중복된 아이디입니다.");
+				}
             },
             error:function () {
 
             }
         });
+		}        
 	}
 	//아이디 중복체크
-	function sendData(){
-        document.getElementById("id").readOnly=true;
-    }
-	//아이디 중복체크 후 readOnly로 변환
 	$("#name").keyup(function(e) { 
 	if (!(e.keyCode >=37 && e.keyCode<=40)) {
 		var v = $(this).val();
@@ -227,30 +203,36 @@ include "../footer.php";
 	}
 	//숫자만 입력
 	function changeSelect(s){
-    	form = document.myform;
     	sel = s[s.selectedIndex].value;
     	dis = true;
- 
     	if(sel=="user"){
         	sel = "";
         	dis = false;
-			form.email2.value = sel;
-        	form.email2.readOnly = dis;
+			document.getElementById("email2").value = sel;
+        	document.getElementById("email2").readOnly = dis;
     	} else {
-        	form.email2.value = sel;
-        	form.email2.readOnly = dis;
+        	document.getElementById("email2").value = sel;
+        	document.getElementById("email2").readOnly = dis;
     	}
 	}
 	//이메일 셀렉트
 	function submitChk(){
+		var name = document.getElementById("name").value;
+		var id = document.getElementById("id").value;
 		var idChk = document.getElementById("id").readOnly;
 		var pw = document.getElementById("password").value;
 		var pwChk = document.getElementById("passChk").value;
 		var home1 = document.getElementById("home1").value;
 		var home2 = document.getElementById("home2").value;
 		var home3 = document.getElementById("home3").value;
+		var phone1 = document.getElementById("phone1").value;
+		var phone2 = document.getElementById("phone2").value;
+		var phone3 = document.getElementById("phone3").value;
+		var email1 = document.getElementById("email1").value;
+		var email2 = document.getElementById("email2").value;
 		var zip = document.getElementById("zip").value;
 		var address1 = document.getElementById("address1").value;
+		var address2 = document.getElementById("address2").value;
 		if(home1 != '' || home2 != '' || home3 != ''){
 			document.getElementById("home1").required=true;
 			document.getElementById("home2").required=true;
@@ -260,23 +242,85 @@ include "../footer.php";
 			document.getElementById("home2").required=false;
 			document.getElementById("home3").required=false;
 		}
+		if(!id){
+			alert("이름을 입력해주세요!");
+			return false;
+		}
 		if(idChk == false){
 			alert("아이디 중복체크를 해주세요!");
 			return false;
-		}else if(pw!=pwChk){
+		}
+		if(!pw || !pwChk){
+			alert("비밀번호를 입력하세요!");
+			return false;
+		}
+		if(pw!=pwChk){
 			alert("비밀번호가 일치하지 않습니다!");
 			return false;
-		}else if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
+		}
+		if(!pw.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)){
 			alert("비밀번호는 영어와 숫자를 포함해야합니다!");
 			return false;
-		}else if(!zip || !address1){
+		}
+		if(document.getElementById("home1").required==true||document.getElementById("home2").required==true||document.getElementById("home3").required==true){
+			if(!home1 || !home2 || !home3){
+				alert("모든 전화번호를 적어주세요!");
+				return false;
+			}else if(home1.length < 3 || home2.length<4 || home3.length <4){
+				alert("모든 전화번호를 적어주세요!");
+				return false;
+			}
+		}
+		if(!email1 || !email2){
+			alert("이메일을 적어주세요!");
+			return false;
+		}
+		if(!zip || !address1){
 			alert("주소를 입력하세요!");
 			return false;
-		}else{
-			return true;
 		}
+
+		var allData = {
+			"name":name, "id":id, "password":pw, "passChk":pwChk, "email1":email1, "email2" : email2, 
+			"phone1":phone1, "phone2":phone2, "phone3":phone3,"home1":home1, "home2":home2, "home3":home3,
+			"zip":zip, "address1":address1, "address2":address2,"radio": $('input[name="radio"]:checked').val(), 
+			"radio2": $('input[name="radio2"]:checked').val()
+			};
+			$.ajax({
+            url: "/member/regist.php",
+            dataType: "json",
+            data: allData,
+            type: "POST",
+            success:function(data){
+                if (data.res == "success") {
+                    alert("회원가입이 완료되었습니다.");
+                    window.location.href='/index.php?mode=complete';
+                }
+				if(data.res == "email_fail"){
+					alert("이메일 양식이 잘못되었습니다.");
+				}
+				if(data.res == "emailDuplicate"){
+					alert("사용중인 이메일입니다.");
+				}
+                if (data.res == "password_fail1") {
+                    alert("비밀번호는 영어와 숫자를 포함해야합니다!");
+                }
+				if (data.res == "password_fail2") {
+                    alert("비밀번호가 일치하지않습니다!");
+                }
+				if(data.res=="fail"){
+					alert("Fail!");
+				}
+            },
+            error:function (){
+
+            },
+            complete:function () {
+
+            }
+        });
 	}
-//submit 체크
+	//submit 체크
 </script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>

@@ -44,11 +44,11 @@ $_SESSION['pin'] = '123456';
 						<input type="text" class="input-text" style="width:50px" id="phone1" name="phone1" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="3" maxlength="3" required/> - 
 						<input type="text" class="input-text" style="width:50px" id="phone2" name="phone2" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4" required/> - 
 						<input type="text" class="input-text" style="width:50px" id="phone3" name="phone3" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="4" maxlength="4" required/>
-						<a href="#" class="btn-s-line" onclick="get_verification_number();" name="get_verification_number" id="get_verification_number">인증번호 받기</a>
+						<a href="#" class="btn-s-line" onclick="get_pin();" name="get_pin" id="get_pin">인증번호 받기</a>
 
 						<br /><br />
 						<input type="text" id="pin" name="pin" class="input-text" style="width:200px" onkeypress="return checkNumber(event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" minlength="6" maxlength="6" required/>
-						<a href="#" class="btn-s-line" onclick="confirm_verification_number();">인증번호 확인</a>
+						<a href="#" class="btn-s-line" onclick="confirm_pin();">인증번호 확인</a>
 					</div>
 					<i class="graphic-phon"><span>휴대폰 인증</span></i>
 				</div>
@@ -62,20 +62,39 @@ include "../footer.php";
 ?>
 </div>
 <script>	
-	function get_verification_number() {
-        const f_mobile_0 = document.getElementById('f_mobile_0').value;
-        const f_mobile_1 = document.getElementById('f_mobile_1').value;
-        const f_mobile_2 = document.getElementById('f_mobile_2').value;
+	function get_pin() {
+        const phone1 = document.getElementById('phone1').value;
+        const phone2 = document.getElementById('phone2').value;
+        const phone3 = document.getElementById('phone3').value;
 
-        if (!f_mobile_0 || !f_mobile_1 || !f_mobile_2) {
+        if (!phone1 || !phone2 || !phone3) {
             alert("휴대폰 번호를 입력해주세요");
             return false;
-        }
+        }else if(phone1.length<3 || phone2.length<4 || phone3.length<4){
+			alert("정확한 번호를 입력해주세요");
+            return false;
+		}else{
+			$.ajax({
+            url: "/member/chkPhone.php",
+            dataType: "json",
+            data: {"phone1": phone1, "phone2": phone2, "phone3": phone3},
+            type: "POST",
+            success:function(data){
+                if (data.res == "success") {
+                    alert("인증번호가 발송되었습니다.");
+                    document.getElementById('phone1').readOnly=true;
+					document.getElementById('phone2').readOnly=true;
+					document.getElementById('phone3').readOnly=true;
+                }else if(data.res=="duplicate"){
+					alert("등록중인 번호입니다.");
+				}
+            },
+            error:function () {
 
-        document.getElementById("f_mobile").value = f_mobile_0 + f_mobile_1 + f_mobile_2;
-        document.getElementById("verification_number").value = 123456;
-
-        alert("인증번호가 전송되었습니다.");
+            }
+        	});
+		}
+        
     }
 
 	function checkNumber(event) {
@@ -85,26 +104,35 @@ include "../footer.php";
   		return false;
 	}
 
-	function confirm_verification_number() {
-        const verification_number = document.getElementById("pin").value
-        const f_mobile = document.getElementById("f_mobile").value
-        $.ajax({
+	function confirm_pin() {
+        const pin = document.getElementById("pin").value
+        const phone1 = document.getElementById("phone1").value
+		const phone2 = document.getElementById("phone2").value
+		const phone3 = document.getElementById("phone3").value
+		if(document.getElementById('phone1').readOnly==false){
+			alert("인증번호를 받아주세요.");
+		}else if(!pin){
+			alert("인증번호를 입력하세요.");
+		}else{
+			$.ajax({
             url: "/member/chkPin.php",
             dataType: "json",
-            data: {"pin": verification_number, "f_mobile": f_mobile},
+            data: {"pin": pin, "phone1": phone1, "phone2": phone2, "phone3":phone3},
             type: "POST",
             success:function(data){
                 if (data.res == "success") {
                     alert("인증번호가 확인되었습니다.");
                     window.location.href='/index.php?mode=step_03';
                 }else{
-					alert("인증번호에 실패하였습니다.");
+					alert("인증에 실패하였습니다.");
 				}
             },
             error:function () {
 
             }
         });
+		}
+        
     }
 </script>
 </body>
