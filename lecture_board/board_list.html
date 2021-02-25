@@ -21,50 +21,50 @@ $row = mysqli_num_rows($result);
 					
 $allPost = $row;
 				
-$onePage = 20;
-$allPage = ceil($allPost / $onePage);
+$onePage = 5;
+    $allPage = ceil($allPost / $onePage);
 					
-if($page < 1 || ($allPage && $page > $allPage)){
-	echo '<script>alert("존재하지 않는 페이지 입니다.");history.back();</script>';
-	exit;
-}					
-$oneSection = 5;
-$currentSection = ceil($page / $oneSection);
-$allSection = ceil($allPage / $oneSection);
-$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
-if($currentSection == $allSection){
-	$lastPage = $allPage;
-}else{
-	$lastPage = $currentSection * $oneSection;
-}		
-$prevPage = $page - 1 ;
-$nextPage = $page + 1;
+    if($page < 1 || ($allPage && $page > $allPage)){
+        echo '<script>alert("존재하지 않는 페이지 입니다.");history.back();</script>';
+        exit;
+    }					
+    $oneSection = 5;
+    $currentSection = ceil($page / $oneSection);
+    $allSection = ceil($allPage / $oneSection);
+    $firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+    if($currentSection == $allSection){
+        $lastPage = $allPage;
+    }else{
+        $lastPage = $currentSection * $oneSection;
+    }		
+    $prevPage = $page - 1 ;
+    $nextPage = $page + 1;
 
-$paging = '';
-if($row == 0){
-	$paging = '<a class="active">1</a>';
-}else{
-	if($page != 1){
-		$paging .= '<a href="board_list.html?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
-	}
-	if($page != 1){
-		$paging .= '<a href="board_list.html?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
-	}
-	for($i=$firstPage; $i<=$lastPage; $i++){
-		if($i==$page){
-			$paging .= '<a class="active">'.$i.'</a>';
-		}else{
-			$paging .= '<a href="board_list.html?page='.$i.'">'.$i.'</a>';
-		}
-	}
-	if($page != $lastPage){
-		$paging .= '<a href="board_list.html?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
-	}
-	if($page != $allPage){
-		$paging .= '<a href="board_list.html?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
-	}
-	$currentLimit = ($onePage * $page) - $onePage;
-}
+    $paging = '';
+    if($row == 0){
+        $paging = '<a class="active">1</a>';
+    }else{
+        if($page != 1){
+            $paging .= '<a href="board_list.html?page=1"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>';
+        }
+        if($page != 1){
+            $paging .= '<a href="board_list.html?page='.$prevPage.'"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>';
+        }
+        for($i=$firstPage; $i<=$lastPage; $i++){
+            if($i==$page){
+                $paging .= '<a class="active">'.$i.'</a>';
+            }else{
+                $paging .= '<a href="board_list.html?page='.$i.'">'.$i.'</a>';
+            }
+        }
+        if($page != $lastPage){
+            $paging .= '<a href="board_list.html?page='.$nextPage.'"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>';
+        }
+        if($page != $allPage){
+            $paging .= '<a href="board_list.html?page='.$allPage.'"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>';
+        }
+        $currentLimit = ($onePage * $page) - $onePage;
+    }
 
 ?>
 <div id="container" class="container">
@@ -165,8 +165,8 @@ if($row == 0){
 						$best_uname = $best_row['uname'];
 						$best_lecture_title = $best_row['lecture_title'];
 						$best_lecture_kind = $best_row['lecture_kind'];
-
-						echo '
+						if($page ==1){
+							echo '
 							<tr class="bbs-sbj">
 								<td><span class="txt-icon-line"><em>BEST</em></span></td>
 								<td>'.$best_lecture_kind.'</td>
@@ -193,6 +193,8 @@ if($row == 0){
 								</td>
 								<td class="last">'.$best_uname.'</td>
 							</tr>';
+						}
+						
 					}
 					if($row == 0){
 					echo '
