@@ -8,6 +8,9 @@ if($_SESSION['userid']==''){
 } else if($_SESSION['userid']!='admin'){
 	echo '<script>alert("관리자만 접근 가능합니다.");history.back();</script>';
 }
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 if(isset($_GET['page'])){
     $page = $_GET['page'];
 }else{

@@ -2,6 +2,9 @@
 session_start();
 include "../header.php";
 include "../body.php";
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 ?>
 <div id="container" class="container">
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">

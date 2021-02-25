@@ -3,6 +3,9 @@ session_start();
 include "../header.php";
 include "../body.php";
 include "../db.php";
+if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
+	echo '<script>alert("잘못된 접근입니다.");location.href="/index.html"</script>';
+}
 $num = $_GET['num'];
 $lecture_query = "select lecture_kind, lecture_title, lecture_teacher, lecture_diffi, lecture_time, lecture_img from lecture where lecture_num=$num";
 $lecture_result = mysqli_query($conn, $lecture_query);
