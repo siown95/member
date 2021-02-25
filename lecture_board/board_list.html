@@ -21,7 +21,7 @@ $row = mysqli_num_rows($result);
 					
 $allPost = $row;
 				
-$onePage = 5;
+$onePage = 20;
     $allPage = ceil($allPost / $onePage);
 					
     if($page < 1 || ($allPage && $page > $allPage)){
