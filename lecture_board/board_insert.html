@@ -6,8 +6,6 @@ if(!preg_match("/".$_SERVER['HTTP_HOST']."/i",$_SERVER['HTTP_REFERER'])) {
 include "../header.php";
 include "../body.php";
 include "../db.php";
-$query = "select lecture_num, lecture_title from lecture";
-$result = mysqli_query($conn, $query);
 ?>
 
 <div id="container" class="container">
@@ -44,15 +42,6 @@ $result = mysqli_query($conn, $query);
 
 						<select class="input-sel ml5" style="width:454px" id="lecture_num" name="lecture_num">
 							<option value="">강의명</option>
-							<?php
-							while($row = mysqli_fetch_array($result)){
-								$lecture_num = $row['lecture_num'];
-								$lecture_title = $row['lecture_title'];
-								echo '
-								<option value="'.$lecture_num.'">'.$lecture_title.'</option>
-								';
-							}
-							?>
 						</select>
 					</td>
 				</tr>
@@ -704,12 +693,34 @@ $result = mysqli_query($conn, $query);
 			return true;
 		}
 	</script>
+	
 	<div class="box-btn t-r">
 		<a href="/index.php?mode=list" class="btn-m-gray">목록</a>
 		<input type="submit" class="btn-m ml5" onclick='saveContent()' value="저장">
 	</div>
 </div>
 </div>
+<script>
+	$(document).ready(function(){
+		$('#kind').change(function(){
+			var kind =  $(this).val();
+			$.ajax({
+			url: "/lecture_board/select_query.php",
+			data: {"kind" : kind},
+			type: "POST",
+			success:function(data){
+				$('#lecture_num option').remove();
+				$('#lecture_num').append('<option value="">강의명</option>');
+				$('#lecture_num').append(data);
+			},
+			 error:function () {
+	
+			}
+			});
+		});
+		
+	});
+</script>
 <?php
 include "../footer.php";
 ?>
