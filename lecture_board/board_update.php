@@ -15,6 +15,13 @@ $attach_file = $_POST['attach_file'];
 $explode = explode('=', $attach_file);
 $file = $explode[1];
 
+$find_file = "select board_file from board where board_num = '$num'";
+$file_result = mysqli_query($conn, $find_file);
+$file_row = mysqli_fetch_array($file_result);
+$origin_file = $file_row['board_file'];
+
+$file_dir = '../files/board_img/'.$origin_file;
+
 if(isset($attach_file)){
     $query = "update board set board_title='$title', board_content='$content', board_satis='$satis', board_file='$board_file', lecture_num=$lecture_num 
     where board_num=$num and member_num='$member_num'";
